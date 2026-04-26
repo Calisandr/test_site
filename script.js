@@ -307,8 +307,8 @@
   });
 
   /* ---- Testimonials slider ---- */
-  const track = document.getElementById('testTrack');
-  const cards = track && track.children;
+  const testTrack = document.getElementById('testTrack');
+  const cards = testTrack && testTrack.children;
   const prev = document.getElementById('testPrev');
   const next = document.getElementById('testNext');
   let index = 0;
@@ -318,10 +318,10 @@
 
   function update(){
     if (!cards || !cards[0]) return;
-    const trackStyle = window.getComputedStyle(track);
+    const trackStyle = window.getComputedStyle(testTrack);
     const gap = parseFloat(trackStyle.columnGap || trackStyle.gap) || 28;
     const cardWidth = cards[0].getBoundingClientRect().width + gap;
-    track.style.transform = `translateX(${-index * cardWidth}px)`;
+    testTrack.style.transform = `translateX(${-index * cardWidth}px)`;
   }
 
   if (prev && next){
@@ -340,9 +340,9 @@
     function stopAuto(){ clearInterval(auto); }
     function restartAuto(){ stopAuto(); startAuto(); }
     startAuto();
-    track.addEventListener('mouseenter', stopAuto);
-    track.addEventListener('mouseleave', startAuto);
-    track.addEventListener('touchstart', stopAuto, { passive: true });
+    testTrack.addEventListener('mouseenter', stopAuto);
+    testTrack.addEventListener('mouseleave', startAuto);
+    testTrack.addEventListener('touchstart', stopAuto, { passive: true });
   }
 
   /* ---- FAQ + Guide details exclusive open (optional) ---- */
