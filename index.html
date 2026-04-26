@@ -1178,6 +1178,14 @@
         <h3>Оставьте заявку</h3>
         <p>Расскажу о&nbsp;свободных окнах в&nbsp;расписании и&nbsp;отвечу на&nbsp;вопросы.</p>
 
+        <!-- Web3Forms config: send to e.morodenko@mail.ru -->
+        <input type="hidden" name="access_key" value="REPLACE_WITH_WEB3FORMS_KEY">
+        <input type="hidden" name="subject" value="Новая заявка с сайта · Мороденко Евгения">
+        <input type="hidden" name="from_name" value="Сайт Мороденко Евгении">
+        <input type="hidden" name="redirect" value="false">
+        <!-- Honeypot — bots fill all fields, humans skip hidden ones -->
+        <input type="checkbox" name="botcheck" style="display:none !important" tabindex="-1" autocomplete="off">
+
         <div class="field">
           <label for="fName">Как к&nbsp;вам обращаться</label>
           <input type="text" id="fName" name="name" required placeholder="Имя">
@@ -1231,6 +1239,12 @@
         <div class="form__success-icon">✓</div>
         <h4>Спасибо, я&nbsp;получила заявку</h4>
         <p>Отвечу вам на&nbsp;указанный телефон в&nbsp;течение рабочего&nbsp;дня.<br>Берегите&nbsp;себя.</p>
+      </div>
+
+      <div class="form__error" id="formError">
+        <div class="form__error-icon">!</div>
+        <h4>Не&nbsp;удалось отправить</h4>
+        <p id="formErrorText">Попробуйте ещё раз через минуту или напишите мне в&nbsp;<a href="https://api.whatsapp.com/send/?phone=79236108440" target="_blank" rel="noopener">WhatsApp</a> / <a href="https://t.me/morodenko" target="_blank" rel="noopener">Telegram</a>.</p>
       </div>
     </form>
   </div>

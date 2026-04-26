@@ -304,36 +304,95 @@
   /* ---- FAQ + Guide details exclusive open (optional) ---- */
   // No exclusivity — let users open multiple
 
-  /* ---- Form ---- */
+  /* ---- Form: real submission via Web3Forms ---- */
   const form = document.getElementById('bookForm');
   if (form){
-    const success = document.getElementById('formSuccess');
-    const content = form.querySelector('.form__content');
+    const success    = document.getElementById('formSuccess');
+    const errorBox   = document.getElementById('formError');
+    const errorText  = document.getElementById('formErrorText');
+    const content    = form.querySelector('.form__content');
+    const submitBtn  = form.querySelector('button[type="submit"]');
+    const submitOriginalHTML = submitBtn.innerHTML;
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const name = form.querySelector('#fName').value.trim();
-      const phone = form.querySelector('#fPhone').value.trim();
-
-      if (!name || !phone){
-        [form.querySelector('#fName'), form.querySelector('#fPhone')].forEach(f => {
-          if (!f.value.trim()){
-            f.style.borderColor = 'var(--terracotta)';
-            f.style.boxShadow = '0 0 0 4px rgba(184,89,58,.12)';
-            setTimeout(() => { f.style.borderColor = ''; f.style.boxShadow = ''; }, 2500);
-          }
-        });
-        return;
-      }
-
+    function showSuccess(){
       content.style.display = 'none';
+      errorBox.classList.remove('show');
       success.classList.add('show');
-
       setTimeout(() => {
         form.reset();
         content.style.display = 'block';
         success.classList.remove('show');
-      }, 7000);
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = submitOriginalHTML;
+      }, 8000);
+    }
+
+    function showError(msg){
+      errorText.innerHTML = msg + ' Или напишите в&nbsp;<a href="https://api.whatsapp.com/send/?phone=79236108440" target="_blank" rel="noopener">WhatsApp</a> / <a href="https://t.me/morodenko" target="_blank" rel="noopener">Telegram</a>.';
+      errorBox.classList.add('show');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = submitOriginalHTML;
+    }
+
+    function flagInvalid(field){
+      field.style.borderColor = 'var(--terracotta)';
+      field.style.boxShadow = '0 0 0 4px rgba(184,89,58,.12)';
+      setTimeout(() => { field.style.borderColor = ''; field.style.boxShadow = ''; }, 2500);
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorBox.classList.remove('show');
+
+      const name  = form.querySelector('#fName').value.trim();
+      const phone = form.querySelector('#fPhone').value.trim();
+
+      // Local validation: name + phone are required
+      let invalid = false;
+      if (!name)  { flagInvalid(form.querySelector('#fName'));  invalid = true; }
+      if (!phone || phone.replace(/\D/g, '').length < 11) {
+        flagInvalid(form.querySelector('#fPhone'));
+        invalid = true;
+      }
+      if (invalid) return;
+
+      // Honeypot: if filled, silently "succeed" — bot trap
+      if (form.querySelector('input[name="botcheck"]').checked){
+        showSuccess();
+        return;
+      }
+
+      // Loading state
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="form__spinner"></span> Отправляю…';
+
+      try {
+        const formData = new FormData(form);
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: formData
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok && data.success){
+          showSuccess();
+        } else {
+          // Common Web3Forms errors → user-friendly message
+          const msg = (data && data.message) ? data.message : '';
+          if (/access[_ ]?key/i.test(msg)){
+            showError('Сервис формы временно недоступен.');
+            console.error('Web3Forms key error:', msg);
+          } else {
+            showError('Что-то пошло не так.');
+            console.error('Web3Forms error:', data);
+          }
+        }
+      } catch (err){
+        showError('Нет связи с сервером.');
+        console.error('Network error:', err);
+      }
     });
 
     /* Phone mask */
