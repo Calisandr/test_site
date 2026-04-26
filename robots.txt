@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_build_assets.py
+
+# Yandex-specific (it's the dominant search engine in Russia)
+User-agent: Yandex
+Allow: /
+Disallow: /api/
+
+Sitemap: https://test-site-pi-wheat.vercel.app/sitemap.xml
+Host: test-site-pi-wheat.vercel.app

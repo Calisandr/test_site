@@ -5,6 +5,50 @@
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ============================================== */
+  /* ---- ANALYTICS HELPER (Yandex.Metrika) ---- */
+  /* ============================================== */
+  const METRIKA_ID = 99999999; // ← replace with real counter ID in HTML <head> too
+  function track(goal, params){
+    try {
+      if (typeof window.ym === 'function'){
+        window.ym(METRIKA_ID, 'reachGoal', goal, params);
+      }
+    } catch(_) {}
+  }
+
+  /* ============================================== */
+  /* ---- THEME TOGGLE (light / dark) ---- */
+  /* ============================================== */
+  const themeToggles = [
+    document.getElementById('themeToggle'),
+    document.getElementById('themeToggleMobile')
+  ].filter(Boolean);
+
+  function getStoredTheme(){
+    try { return localStorage.getItem('theme'); } catch(_) { return null; }
+  }
+  function setTheme(t){
+    document.documentElement.setAttribute('data-theme', t);
+    try { localStorage.setItem('theme', t); } catch(_){}
+    track('theme_change', { theme: t });
+  }
+  themeToggles.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Add transition class temporarily so the swap animates smoothly
+      document.documentElement.classList.add('theme-anim');
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      setTheme(current === 'dark' ? 'light' : 'dark');
+      setTimeout(() => document.documentElement.classList.remove('theme-anim'), 500);
+    });
+  });
+  // Sync with OS theme changes if user hasn't manually picked
+  matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', e => {
+    if (!getStoredTheme()){
+      document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+    }
+  });
+
   /* ---- Loader ---- */
   const loader = document.getElementById('loader');
   window.addEventListener('load', () => {
@@ -587,5 +631,144 @@
     });
   }
   init3DBackground();
+
+  /* ============================================== */
+  /* ---- PACKAGE CALCULATOR ---- */
+  /* ============================================== */
+  (function initCalculator(){
+    const slider     = document.getElementById('calcSlider');
+    const countEl    = document.getElementById('calcCount');
+    const baseEl     = document.getElementById('calcBase');
+    const finalEl    = document.getElementById('calcFinal');
+    const saveEl     = document.getElementById('calcSave');
+    const ctaCount   = document.getElementById('calcCtaCount');
+    if (!slider) return;
+
+    const PRICE_PER_SESSION = 5000;
+
+    function pluralSessions(n){
+      const m10 = n % 10, m100 = n % 100;
+      if (m10 === 1 && m100 !== 11) return 'встреча';
+      if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return 'встречи';
+      return 'встреч';
+    }
+    function fmt(n){ return new Intl.NumberFormat('ru-RU').format(n) + ' ₽'; }
+
+    function calculate(n){
+      // Pricing tiers based on real b17 packages:
+      //  1–4    → no discount (single sessions)
+      //  5–9    → 22 000 ₽ for 5 → 4400/sess
+      //  10+    → 40 000 ₽ for 10 → 4000/sess
+      const base = n * PRICE_PER_SESSION;
+      let finalPrice;
+      if (n <= 4)        finalPrice = base;
+      else if (n < 10)   finalPrice = 22000 + (n - 5) * 4400;        // extrapolate from 5-pack rate
+      else               finalPrice = Math.round(40000 + (n - 10) * 4000); // extrapolate from 10-pack rate
+
+      const saved = base - finalPrice;
+      const pct   = base > 0 ? Math.round(saved / base * 100) : 0;
+      return { base, finalPrice, saved, pct };
+    }
+
+    function render(){
+      const n = parseInt(slider.value, 10);
+      const { base, finalPrice, saved, pct } = calculate(n);
+
+      countEl.textContent = `${n} ${pluralSessions(n)}`;
+      baseEl.textContent  = fmt(base);
+      finalEl.textContent = fmt(finalPrice);
+      ctaCount.textContent = n;
+      // Plural fix in CTA text wrapper
+      ctaCount.parentNode.childNodes.forEach(node => {
+        if (node.nodeType === 3 && node.textContent.includes('встреч')){
+          node.textContent = ` ${pluralSessions(n)}  `;
+        }
+      });
+
+      if (saved > 0){
+        saveEl.innerHTML = `${fmt(saved)} <small>(${pct}%)</small>`;
+        saveEl.parentElement.style.display = '';
+      } else {
+        saveEl.parentElement.style.display = 'none';
+      }
+
+      // Visual fill on the slider track
+      const p = ((n - slider.min) / (slider.max - slider.min)) * 100;
+      slider.style.setProperty('--p', p + '%');
+    }
+
+    slider.addEventListener('input', render);
+    slider.addEventListener('change', () => track('calc_used', { sessions: parseInt(slider.value, 10) }));
+    render();
+  })();
+
+  /* ============================================== */
+  /* ---- ANALYTICS EVENT TRACKING ---- */
+  /* ============================================== */
+  // CTA / messenger clicks
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (!link) return;
+    const href = link.getAttribute('href') || '';
+
+    if (/wa\.me|api\.whatsapp\.com/.test(href))             track('click_whatsapp');
+    else if (/^https?:\/\/t\.me/.test(href))                track('click_telegram');
+    else if (/vk\.com/.test(href))                          track('click_vk');
+    else if (/instagram\.com/.test(href))                   track('click_instagram');
+    else if (/^tel:/.test(href))                            track('click_phone');
+    else if (/^mailto:/.test(href))                         track('click_email');
+    else if (link.dataset.track)                            track(link.dataset.track);
+  }, { passive: true });
+
+  // Form submission success → goal "lead_submitted"
+  // (Wrap into the existing success handler)
+  const _origForm = document.getElementById('bookForm');
+  if (_origForm){
+    _origForm.addEventListener('submit', () => {
+      // Will fire even if validation fails; refine inside form code if needed
+      setTimeout(() => {
+        if (document.getElementById('formSuccess')?.classList.contains('show')){
+          track('lead_submitted');
+        }
+      }, 100);
+    });
+  }
+
+  // Section view tracking — fire once per section when 50%+ visible
+  const sectionGoals = {
+    'about':       'view_about',
+    'issues':      'view_issues',
+    'credentials': 'view_credentials',
+    'planners':    'view_planners',
+    'guide':       'view_guide',
+    'services':    'view_services',
+    'contact':     'view_contact'
+  };
+  if ('IntersectionObserver' in window){
+    const seen = new Set();
+    const sectionIO = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting && !seen.has(en.target.id)){
+          seen.add(en.target.id);
+          const goal = sectionGoals[en.target.id];
+          if (goal) track(goal);
+        }
+      });
+    }, { threshold: 0.5 });
+    Object.keys(sectionGoals).forEach(id => {
+      const el = document.getElementById(id);
+      if (el) sectionIO.observe(el);
+    });
+  }
+
+  // Scroll-depth: fires once when user reaches bottom of page
+  let scrollEnd = false;
+  window.addEventListener('scroll', () => {
+    if (scrollEnd) return;
+    if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 100){
+      scrollEnd = true;
+      track('scroll_to_end');
+    }
+  }, { passive: true });
 
 })();
