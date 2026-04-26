@@ -94,13 +94,14 @@
     });
   }
 
-  /* ---- Scroll progress ---- */
+  /* ---- Scroll progress bar at the very top of the viewport ---- */
   const scrollProgress = document.getElementById('scrollProgress');
   function updateScrollProgress(){
+    if (!scrollProgress) return;
     const h = document.documentElement;
     const scrolled = (h.scrollTop || document.body.scrollTop) /
                      ((h.scrollHeight || document.body.scrollHeight) - h.clientHeight);
-    if (scrollProgress) scrollProgress.style.width = (scrolled * 100) + '%';
+    scrollProgress.style.width = (scrolled * 100) + '%';
   }
   window.addEventListener('scroll', updateScrollProgress, { passive: true });
   updateScrollProgress();

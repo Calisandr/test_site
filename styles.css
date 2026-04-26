@@ -237,6 +237,17 @@ button{ font-family: inherit; }
   100%{ width: 0%; transform: translateX(100%); }
 }
 
+/* ============== SCROLL PROGRESS BAR (lives inside .nav, anchored to bottom) ============== */
+.scroll-progress{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--terracotta), var(--gold));
+  pointer-events: none;
+}
+
 /* ============== CUSTOM CURSOR (single elegant SVG arrow everywhere) ============== */
 /* Hide old floating cursor element */
 .cursor{ display: none !important; }
@@ -267,16 +278,6 @@ button{ font-family: inherit; }
   }
 }
 
-/* ============== SCROLL PROGRESS ============== */
-.scroll-progress{
-  position: fixed;
-  top: 0; left: 0;
-  height: 2px;
-  width: 0%;
-  background: linear-gradient(90deg, var(--terracotta), var(--gold));
-  z-index: 100;
-  transform-origin: left center;
-}
 
 /* ============== TYPOGRAPHY ============== */
 h1,h2,h3,h4{
@@ -434,12 +435,24 @@ h1,h2,h3,h4{
   letter-spacing: 0.02em;
   border-radius: 999px;
   border: none;
+  outline: none;
+  text-decoration: none;
+  -webkit-text-decoration: none;
   cursor: pointer;
   transition: background .35s var(--ease-out), color .35s var(--ease-out), box-shadow .35s var(--ease-out);
   position: relative;
-  overflow: hidden;
+  /* overflow: hidden REMOVED — was clipping the arrow's "head" (>) on hover
+     translate, leaving only the stem visible as a stray stripe inside the
+     button's right edge. */
   will-change: transform;
+  background-image: none;
 }
+.btn:focus-visible{
+  outline: 2px solid var(--terracotta);
+  outline-offset: 3px;
+}
+/* Restore the bg-image=none default specifically on hover too */
+.btn:hover{ background-image: none; }
 .btn:hover{
   background: var(--terracotta);
   color: var(--on-accent);
@@ -454,8 +467,14 @@ h1,h2,h3,h4{
   background: var(--ink);
   color: var(--paper);
 }
-.btn__arrow{ transition: transform .3s var(--ease-out); display:inline-block; }
-.btn:hover .btn__arrow{ transform: translateX(6px); }
+.btn__arrow{
+  transition: transform .3s var(--ease-out);
+  display: inline-block;
+  /* Slight margin-right gives breathing room inside the button so the
+     arrow head (>) is never visually flush with the rounded right edge */
+  margin-right: 2px;
+}
+.btn:hover .btn__arrow{ transform: translateX(4px); }
 
 .nav__burger{
   display: flex;
@@ -2251,6 +2270,21 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   transition: all .25s;
   font-weight: 400;
 }
+/* Custom dropdown arrow on selects — sits comfortably away from the right edge */
+.field select{
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232a211b' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 12px 8px;
+}
+:root[data-theme="dark"] .field select{
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23f0e6d8' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.field select::-ms-expand{ display: none; }
 .field input:focus,
 .field select:focus,
 .field textarea:focus{
@@ -2261,11 +2295,18 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 }
 .field textarea{ resize: vertical; min-height: 100px; font-family: var(--f-sans); }
 .field-row{ display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.form .btn{ width: 100%; justify-content: center; padding: 18px; font-size: 1rem; margin-top: 10px; }
+.form .btn{
+  width: 100%;
+  justify-content: center;
+  padding: 18px;
+  font-size: 1rem;
+  margin-top: 26px;            /* equal breathing room top + bottom around the CTA */
+  margin-bottom: 6px;
+}
 .form__agree{
   font-size: 0.78rem;
   color: var(--ink-mute);
-  margin: 16px 0 0;
+  margin: 22px 0 0;
   text-align: center;
   line-height: 1.5;
 }
@@ -2706,7 +2747,11 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px; height: 40px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;          /* never let the flex parent squish it horizontally */
+  flex-shrink: 0;
+  padding: 0;
   border-radius: 50%;
   border: 1px solid var(--line);
   background: var(--paper);
@@ -2715,6 +2760,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   transition: transform .35s var(--ease-out), background .3s, color .3s, border-color .3s;
   position: relative;
   overflow: hidden;
+  line-height: 0;            /* defeat any inherited line-height stretch */
 }
 .theme-toggle:hover{
   background: var(--terracotta);
@@ -2722,9 +2768,14 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   border-color: var(--terracotta);
   transform: rotate(15deg);
 }
+/* Icons sit dead-center inside the button via top/left + negative margin —
+   absolute children don't honour flex centering, so we position explicitly */
 .theme-toggle__icon{
   width: 18px; height: 18px;
   position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -9px 0 0 -9px;
   transition: transform .5s var(--ease-out), opacity .35s;
 }
 .theme-toggle__icon--sun{ opacity: 1; transform: rotate(0); }

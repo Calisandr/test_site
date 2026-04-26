@@ -186,9 +186,6 @@
   <div class="cursor__ring"></div>
 </div>
 
-<!-- ============== SCROLL PROGRESS ============== -->
-<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-
 <!-- ============== NAV ============== -->
 <nav class="nav" id="nav">
   <div class="container nav__inner">
@@ -222,6 +219,9 @@
       <span class="btn__arrow">→</span>
     </a>
   </div>
+  <!-- Scroll progress sits at the BOTTOM edge of the nav, not at the top of
+       the viewport — so it never visually overlaps with the "Записаться" pill -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 </nav>
 
 <!-- Burger lives at body root (outside <nav>) so its z-index works in the
