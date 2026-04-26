@@ -354,7 +354,10 @@ h1,h2,h3,h4{
 .btn:hover .btn__arrow{ transform: translateX(6px); }
 
 .nav__burger{
-  display:flex;
+  display: flex;
+  position: fixed;
+  top: 18px;
+  right: 20px;
   background: none;
   border: none;
   width: 40px; height: 40px;
@@ -363,7 +366,10 @@ h1,h2,h3,h4{
   justify-content: center;
   gap: 5px;
   padding: 0;
+  z-index: 60;
+  transition: top .35s var(--ease-out);
 }
+body.nav-scrolled .nav__burger{ top: 12px; }
 .nav__burger span{
   display:block;
   width: 24px; height: 2px;
@@ -2267,10 +2273,10 @@ h1,h2,h3,h4{
   z-index: 51;
   overflow-y: auto;
 }
-/* Burger stays visible above the panel so the user can close the menu */
-.nav__burger{ position: relative; z-index: 52; }
 /* On small phones the panel goes full-width so it cleanly covers the logo
-   (instead of leaving a strip of page content on the left) */
+   (instead of leaving a strip of page content on the left) — burger is
+   already fixed-positioned at root level with z-index: 60, so it stays
+   visible above the panel automatically */
 @media (max-width: 640px){
   .nav__mobile{
     width: 100%;
@@ -2461,7 +2467,8 @@ h1,h2,h3,h4{
   .logo__name small{ font-size: 0.58rem; letter-spacing: 0.15em; }
   .nav{ padding: 16px 0; }
   .nav.scrolled{ padding: 10px 0; }
-  .nav__burger{ width: 36px; height: 36px; }
+  .nav__burger{ width: 36px; height: 36px; top: 16px; right: 18px; }
+  body.nav-scrolled .nav__burger{ top: 10px; }
 
   .portrait-stamp{ display: none; }
 }

@@ -64,8 +64,11 @@
   /* ---- Nav scrolled state ---- */
   const nav = document.getElementById('nav');
   function onScroll(){
-    if (window.scrollY > 40) nav.classList.add('scrolled');
-    else nav.classList.remove('scrolled');
+    const scrolled = window.scrollY > 40;
+    nav.classList.toggle('scrolled', scrolled);
+    // Mirror on body so the fixed-positioned burger (which lives outside <nav>)
+    // can also react to the scrolled state
+    document.body.classList.toggle('nav-scrolled', scrolled);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();

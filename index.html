@@ -56,11 +56,14 @@
       Записаться
       <span class="btn__arrow">→</span>
     </a>
-    <button class="nav__burger" id="burger" aria-label="Меню">
-      <span></span><span></span><span></span>
-    </button>
   </div>
 </nav>
+
+<!-- Burger lives at body root (outside <nav>) so its z-index works in the
+     root stacking context — it can stay above the slide-in mobile panel -->
+<button class="nav__burger" id="burger" aria-label="Меню">
+  <span></span><span></span><span></span>
+</button>
 
 <div class="nav__mobile" id="navMobile">
   <a href="#about">Обо мне</a>
