@@ -159,8 +159,11 @@ button{ font-family: inherit; }
   select, select option, option{
     cursor: pointer !important;
   }
-  /* Primary action buttons: native OS pointer (hand) — universally recognized "click here" */
-  .service__arrow{
+  /* Primary action buttons: native OS pointer (hand) — universally recognized "click here".
+     Apply to descendants too (the inner <svg>), otherwise the global `body *` rule
+     re-asserts the SVG arrow cursor over the icon and the cursor flickers. */
+  .service__arrow,
+  .service__arrow *{
     cursor: pointer !important;
   }
 }
