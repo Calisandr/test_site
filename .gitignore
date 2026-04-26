@@ -1,0 +1,32 @@
+# OS / system files
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+*.lnk
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node (if dependencies are added later)
+node_modules/
+package-lock.json
+*.log
+npm-debug.log*
+
+# Build / cache
+dist/
+build/
+.cache/
+.tmp/
+
+# Local Claude Code config (machine-specific)
+.claude/
+
+# Source materials (personal photos, biographical docs, drafts) —
+# kept locally only; the website uses the optimized copies in /assets
+данные для создания сайта/
