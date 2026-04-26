@@ -12,11 +12,17 @@ ehthumbs.db
 *.swo
 *~
 
-# Node (if dependencies are added later)
+# Node
 node_modules/
-package-lock.json
 *.log
 npm-debug.log*
+
+# Env files — NEVER commit real secrets
+.env
+.env.local
+.env.*.local
+.vercel
+# (.env.example is intentionally tracked as documentation)
 
 # Build / cache
 dist/

@@ -366,28 +366,31 @@
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="form__spinner"></span> Отправляю…';
 
+      // Collect form data into a plain object
+      const formData = new FormData(form);
+      const payload = Object.fromEntries(formData.entries());
+
       try {
-        const formData = new FormData(form);
-        const response = await fetch('https://api.web3forms.com/submit', {
+        const response = await fetch('/api/send-lead', {
           method: 'POST',
-          headers: { 'Accept': 'application/json' },
-          body: formData
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
         });
 
         const data = await response.json().catch(() => ({}));
 
         if (response.ok && data.success){
           showSuccess();
+        } else if (response.status === 429){
+          showError('Слишком много заявок подряд.');
+        } else if (response.status === 400){
+          showError(data.error || 'Проверьте, что имя и телефон указаны.');
         } else {
-          // Common Web3Forms errors → user-friendly message
-          const msg = (data && data.message) ? data.message : '';
-          if (/access[_ ]?key/i.test(msg)){
-            showError('Сервис формы временно недоступен.');
-            console.error('Web3Forms key error:', msg);
-          } else {
-            showError('Что-то пошло не так.');
-            console.error('Web3Forms error:', data);
-          }
+          showError('На стороне сервера сбой.');
+          console.error('Server error:', response.status, data);
         }
       } catch (err){
         showError('Нет связи с сервером.');

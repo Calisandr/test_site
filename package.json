@@ -1,0 +1,13 @@
+{
+  "name": "morodenko-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Сайт психолога Мороденко Евгении · кандидат психологических наук, доцент",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "resend": "^4.0.0"
+  }
+}
