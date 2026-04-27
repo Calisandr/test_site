@@ -1271,7 +1271,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   box-shadow: 0 40px 60px -25px rgba(42,33,27,.35);
 }
 .planner__cover{
-  aspect-ratio: 3/4;
+  aspect-ratio: 3508 / 2480;
   overflow: hidden;
   position: relative;
   background: linear-gradient(135deg, #e8d5b7, #d4b896);
@@ -1283,19 +1283,6 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   transition: transform 1.2s var(--ease-out);
 }
 .planner:hover .planner__cover img{ transform: scale(1.08); }
-.planner__badge{
-  position: absolute;
-  top: 18px; left: 18px;
-  background: var(--terracotta);
-  color: var(--on-accent);
-  font-family: var(--f-serif);
-  font-style: italic;
-  padding: 6px 16px;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  z-index: 2;
-}
 .planner__body{
   padding: 32px 28px 28px;
   display: flex;
