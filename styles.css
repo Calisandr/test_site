@@ -273,7 +273,9 @@ button{ font-family: inherit; }
      Apply to descendants too (the inner <svg>), otherwise the global `body *` rule
      re-asserts the SVG arrow cursor over the icon and the cursor flickers. */
   .service__arrow,
-  .service__arrow *{
+  .service__arrow *,
+  .theme-toggle,
+  .theme-toggle *{
     cursor: pointer !important;
   }
 }
@@ -2776,6 +2778,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   top: 50%;
   left: 50%;
   margin: -9px 0 0 -9px;
+  pointer-events: none;
   transition: transform .5s var(--ease-out), opacity .35s;
 }
 .theme-toggle__icon--sun{ opacity: 1; transform: rotate(0); }
