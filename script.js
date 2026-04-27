@@ -349,6 +349,172 @@
   /* ---- FAQ + Guide details exclusive open (optional) ---- */
   // No exclusivity — let users open multiple
 
+  /* ---- Custom selects: keeps cursor/arrow behavior fully under site CSS ---- */
+  function closeCustomSelects(except){
+    document.querySelectorAll('.custom-select.is-open').forEach(widget => {
+      if (widget === except) return;
+      widget.classList.remove('is-open');
+      widget.querySelector('.custom-select__button')?.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  function initCustomSelect(select){
+    if (!select || select.dataset.customSelectReady) return;
+    select.dataset.customSelectReady = 'true';
+    select.classList.add('native-select');
+    select.tabIndex = -1;
+    select.setAttribute('aria-hidden', 'true');
+
+    const options = Array.from(select.options);
+    if (!options.length) return;
+
+    const widget = document.createElement('div');
+    widget.className = 'custom-select';
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'custom-select__button';
+    button.setAttribute('aria-haspopup', 'listbox');
+    button.setAttribute('aria-expanded', 'false');
+
+    const value = document.createElement('span');
+    value.className = 'custom-select__value';
+    button.appendChild(value);
+
+    const list = document.createElement('div');
+    list.className = 'custom-select__list';
+    list.setAttribute('role', 'listbox');
+
+    const baseId = select.id || select.name || `select-${Math.random().toString(36).slice(2)}`;
+    button.id = `${baseId}-custom-button`;
+    list.id = `${baseId}-custom-list`;
+    button.setAttribute('aria-controls', list.id);
+
+    options.forEach((option, index) => {
+      const item = document.createElement('div');
+      item.className = 'custom-select__option';
+      item.setAttribute('role', 'option');
+      item.dataset.index = String(index);
+      item.textContent = option.textContent;
+      item.addEventListener('mousemove', () => setActive(index, false));
+      item.addEventListener('click', () => {
+        choose(index, true);
+        close();
+        button.focus({ preventScroll: true });
+      });
+      list.appendChild(item);
+    });
+
+    const items = Array.from(list.children);
+    let activeIndex = Math.max(0, select.selectedIndex);
+
+    function sync(){
+      const selectedIndex = Math.max(0, select.selectedIndex);
+      const selected = options[selectedIndex];
+      value.textContent = selected?.textContent || '';
+      items.forEach((item, index) => {
+        const isSelected = index === selectedIndex;
+        item.classList.toggle('is-selected', isSelected);
+        item.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+      });
+      setActive(selectedIndex, false);
+    }
+
+    function setActive(index, scroll = true){
+      activeIndex = Math.max(0, Math.min(items.length - 1, index));
+      items.forEach((item, itemIndex) => {
+        item.classList.toggle('is-active', itemIndex === activeIndex);
+      });
+      if (scroll && widget.classList.contains('is-open')){
+        items[activeIndex]?.scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    function choose(index, emitChange){
+      select.selectedIndex = index;
+      sync();
+      if (emitChange){
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+
+    function open(){
+      closeCustomSelects(widget);
+      widget.classList.add('is-open');
+      button.setAttribute('aria-expanded', 'true');
+      setActive(Math.max(0, select.selectedIndex));
+    }
+
+    function close(){
+      widget.classList.remove('is-open');
+      button.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggle(){
+      widget.classList.contains('is-open') ? close() : open();
+    }
+
+    button.addEventListener('click', toggle);
+    button.addEventListener('keydown', event => {
+      const isOpen = widget.classList.contains('is-open');
+      if (event.key === 'ArrowDown'){
+        event.preventDefault();
+        if (!isOpen) open();
+        else setActive(activeIndex + 1);
+      } else if (event.key === 'ArrowUp'){
+        event.preventDefault();
+        if (!isOpen) open();
+        else setActive(activeIndex - 1);
+      } else if (event.key === 'Home'){
+        event.preventDefault();
+        if (!isOpen) open();
+        setActive(0);
+      } else if (event.key === 'End'){
+        event.preventDefault();
+        if (!isOpen) open();
+        setActive(items.length - 1);
+      } else if (event.key === 'Enter' || event.key === ' '){
+        event.preventDefault();
+        if (isOpen){
+          choose(activeIndex, true);
+          close();
+        } else {
+          open();
+        }
+      } else if (event.key === 'Escape'){
+        close();
+      }
+    });
+
+    document.addEventListener('click', event => {
+      if (!widget.contains(event.target)) close();
+    });
+
+    const field = select.closest('.field');
+    const label = field?.querySelector(`label[for="${select.id}"]`);
+    label?.addEventListener('click', event => {
+      event.preventDefault();
+      button.focus({ preventScroll: true });
+      open();
+    });
+
+    select.addEventListener('change', sync);
+    select.after(widget);
+    widget.append(button, list);
+    sync();
+  }
+
+  document.querySelectorAll('.field select').forEach(initCustomSelect);
+  document.querySelectorAll('form').forEach(formEl => {
+    formEl.addEventListener('reset', () => {
+      setTimeout(() => {
+        formEl.querySelectorAll('select.native-select').forEach(select => {
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+      }, 0);
+    });
+  });
+
   /* ---- Form: real submission via Web3Forms ---- */
   const form = document.getElementById('bookForm');
   if (form){

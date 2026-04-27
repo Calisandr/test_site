@@ -263,19 +263,32 @@ button{ font-family: inherit; }
   input[type="password"], input[type="search"], textarea{
     cursor: text;
   }
-  /* Select dropdowns: use NATIVE pointer cursor so it stays visible
-     when the OS-level options popup opens (custom SVG cursors are not
-     painted inside that native popup on Windows/macOS) */
-  select, select option, option{
-    cursor: pointer !important;
-  }
-  /* Primary action buttons: native OS pointer (hand) — universally recognized "click here".
-     Apply to descendants too (the inner <svg>), otherwise the global `body *` rule
-     re-asserts the SVG arrow cursor over the icon and the cursor flickers. */
-  .service__arrow,
-  .service__arrow *,
-  .theme-toggle,
-  .theme-toggle *{
+  /* Interactive elements and their children keep the hand cursor across
+     the full clickable area, not just over text or icons. */
+  a,
+  a *,
+  button,
+  button *,
+  [role="button"],
+  [role="button"] *,
+  summary,
+  summary *,
+  label[for],
+  select,
+  select option,
+  option,
+  .service,
+  .service *,
+  .contact__channel,
+  .contact__channel *,
+  .creds__tab,
+  .creds__tab *,
+  .test__btn,
+  .test__btn *,
+  .planner__cta,
+  .planner__cta *,
+  .custom-select,
+  .custom-select *{
     cursor: pointer !important;
   }
 }
@@ -2287,6 +2300,91 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23f0e6d8' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 .field select::-ms-expand{ display: none; }
+.field select.native-select{
+  display: none;
+}
+.custom-select{
+  position: relative;
+  width: 100%;
+}
+.custom-select__button{
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 18px;
+  background-color: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  font-family: var(--f-sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.35;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transition: border-color .25s, background-color .25s, box-shadow .25s;
+}
+.custom-select__button::after{
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 1.6px solid currentColor;
+  border-bottom: 1.6px solid currentColor;
+  transform: rotate(45deg);
+  margin-top: -4px;
+  flex: 0 0 auto;
+  transition: transform .25s var(--ease-out);
+}
+.custom-select.is-open .custom-select__button::after{
+  transform: translateY(4px) rotate(225deg);
+}
+.custom-select__button:hover,
+.custom-select.is-open .custom-select__button,
+.custom-select__button:focus-visible{
+  outline: none;
+  border-color: var(--terracotta);
+  background-color: var(--paper);
+  box-shadow: 0 0 0 4px rgba(184,89,58,.08);
+}
+.custom-select__list{
+  display: none;
+  position: absolute;
+  z-index: 35;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: min(280px, 46vh);
+  overflow: auto;
+  padding: 6px;
+  background: var(--paper);
+  border: 1px solid var(--terracotta);
+  border-radius: 10px;
+  box-shadow: 0 18px 36px -22px rgba(42,33,27,.42), 0 8px 18px -14px rgba(42,33,27,.22);
+}
+.custom-select.is-open .custom-select__list{
+  display: block;
+}
+.custom-select__option{
+  padding: 10px 12px;
+  border-radius: 7px;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.35;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background-color .18s, color .18s;
+}
+.custom-select__option:hover,
+.custom-select__option.is-active{
+  background: var(--terracotta);
+  color: var(--on-accent);
+}
+.custom-select__option.is-selected:not(:hover):not(.is-active){
+  background: rgba(184,89,58,.12);
+  color: var(--ink);
+}
 .field input:focus,
 .field select:focus,
 .field textarea:focus{
