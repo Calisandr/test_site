@@ -39,6 +39,7 @@
       document.documentElement.classList.add('theme-anim');
       const current = document.documentElement.getAttribute('data-theme') || 'light';
       setTheme(current === 'dark' ? 'light' : 'dark');
+      setTimeout(() => btn.blur(), 0);
       setTimeout(() => document.documentElement.classList.remove('theme-anim'), 500);
     });
   });

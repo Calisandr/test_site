@@ -217,6 +217,7 @@
         var next = current === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
         try { localStorage.setItem('theme', next); } catch(e){}
+        setTimeout(function(){ toggle.blur(); }, 0);
         setTimeout(function(){ document.documentElement.classList.remove('theme-anim'); }, 500);
       });
     }
