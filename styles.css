@@ -2263,7 +2263,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 .field textarea{
   width: 100%;
   padding: 14px 18px;
-  background: var(--bg);
+  background-color: var(--bg);
   border: 1px solid var(--line);
   border-radius: 10px;
   font-family: var(--f-sans);
@@ -2292,7 +2292,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 .field textarea:focus{
   outline: none;
   border-color: var(--terracotta);
-  background: var(--paper);
+  background-color: var(--paper);
   box-shadow: 0 0 0 4px rgba(184,89,58,.08);
 }
 .field textarea{ resize: vertical; min-height: 100px; font-family: var(--f-sans); }
