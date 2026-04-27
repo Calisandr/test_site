@@ -2447,7 +2447,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   place-items: center;
   width: 48px;
   height: 48px;
-  margin: 0 0 24px;
+  margin: 14px 0 24px;
   border: 1px solid var(--line);
   border-radius: 50%;
   color: var(--terracotta);
@@ -3260,7 +3260,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   .psy-question legend span{
     width: 42px;
     height: 42px;
-    margin-bottom: 22px;
+    margin: 14px 0 22px;
     font-size: .9rem;
   }
   .psy-question__answers{ grid-template-columns: 1fr 1fr; }
