@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f4ede3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1410" media="(prefers-color-scheme: dark)">
+<title>Тест: нужна ли мне помощь психолога? · Мороденко Евгения</title>
+<meta name="description" content="Короткий тест-опрос из 10 вопросов, который помогает понять, стоит ли обратиться за психологической поддержкой.">
+<link rel="canonical" href="https://test-site-pi-wheat.vercel.app/test.html">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+<script>
+  (function(){
+    try {
+      var t = localStorage.getItem('theme');
+      if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    } catch(e){}
+  })();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="test-body">
+
+<nav class="test-nav" aria-label="Навигация теста">
+  <a href="index.html" class="logo test-nav__logo">
+    <span class="logo__mark">Е</span>
+    <span class="logo__name">
+      Мороденко Евгения
+      <small>психолог · кандидат наук · доцент</small>
+    </span>
+  </a>
+  <div class="test-nav__actions">
+    <a href="index.html#contact" class="test-nav__link">Записаться</a>
+    <button class="theme-toggle" id="testThemeToggle" aria-label="Переключить тёмную/светлую тему" title="Тема">
+      <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="4"/>
+        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+      </svg>
+      <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<main class="test-page">
+  <section class="test-intro">
+    <div class="test-intro__copy">
+      <a href="index.html" class="test-back">← Вернуться на главную</a>
+      <span class="eyebrow">Тест-опрос</span>
+      <h1>Нужна ли мне помощь психолога?</h1>
+      <p>
+        Ответьте на 10 коротких вопросов. Тест не ставит диагноз и не заменяет консультацию, но помогает заметить, насколько сейчас нужна поддержка.
+      </p>
+      <div class="test-intro__facts" aria-label="Кратко о тесте">
+        <span>10 вопросов</span>
+        <span>Да / Нет</span>
+        <span>Результат сразу</span>
+      </div>
+    </div>
+    <div class="test-intro__visual" aria-hidden="true">
+      <picture>
+        <source srcset="assets/portrait-warm.webp" type="image/webp">
+        <img src="assets/portrait-warm.jpg" alt="">
+      </picture>
+    </div>
+  </section>
+
+  <section class="psy-test-shell" aria-labelledby="psyTestTitle">
+    <div class="psy-test-shell__head">
+      <div>
+        <span class="eyebrow">Самопроверка</span>
+        <h2 id="psyTestTitle">Отметьте, что похоже на ваше состояние сейчас</h2>
+      </div>
+      <div class="psy-test-progress" aria-live="polite">
+        <span id="psyAnswered">0</span>/10
+      </div>
+    </div>
+
+    <div class="psy-test-bar" aria-hidden="true">
+      <span id="psyProgress"></span>
+    </div>
+
+    <form class="psy-test" id="psyTest">
+      <fieldset class="psy-question">
+        <legend><span>01</span> У вас часто вспышки агрессии и нервные срывы?</legend>
+        <div class="psy-question__answers">
+          <label><input type="radio" name="q1" value="yes">Да</label>
+          <label><input type="radio" name="q1" value="no">Нет</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="psy-question">
+        <legend><span>02</span> Чувствуете ли вы, что сейчас у вас есть проблема, которая вас беспокоит, но пока вы не нашли её решения?</legend>
+        <div class="psy-question__answers">
+          <label><input type="radio" name="q2" value="yes">Да</label>
+          <label><input type="radio" name="q2" value="no">Нет</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="psy-question">
+        <legend><span>03</span> Вы бываете недовольны другими людьми и считаете, что они должны измениться?</legend>
+        <div class="psy-question__answers">
+          <label><input type="radio" name="q3" value="yes">Да</label>
+          <label><input type="radio" name="q3" value="no">Нет</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="psy-question">
+        <legend><span>04</span> Вам присуще чувство неуверенности в себе, вы не нравитесь себе и недовольны собой?</legend>
+        <div class="psy-question__answers">
+          <label><input type="radio" name="q4" value="yes">Да</label>
+          <label><input type="radio" name="q4" value="no">Нет</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="psy-question">
+        <legend><span>05</span> Вы замечаете, что в вашей жизни повторяются похожие ситуации или отношения с разными людьми, но вам не удаётся разорвать этот порочный круг?</legend>
+        <div class="psy-question__answers">
+          <label><input type="radio" name="q5" value="yes">Да</label>
+          <label><input type="radio" name="q5" value="no">Нет</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="psy-question">
+        <legend><span>06</span> Ваша жизнь сложилась не так, как вам хотелось?</legend>
+        <div class="psy-question__answers">
+          <label><input type="radio" name="q6" value="yes">Да</label>
+          <label><input type="radio" name="q6" value="no">Нет</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="psy-question">
+        <legend><span>07</span> Вы часто о чём-то тревожитесь и переживаете?</legend>
+        <div class="psy-question__answers">
+          <label><input type="radio" name="q7" value="yes">Да</label>
+          <label><input type="radio" name="q7" value="no">Нет</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="psy-question">
+        <legend><span>08</span> Вам сложно отказывать людям?</legend>
+        <div class="psy-question__answers">
+          <label><input type="radio" name="q8" value="yes">Да</label>
+          <label><input type="radio" name="q8" value="no">Нет</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="psy-question">
+        <legend><span>09</span> Вы недавно пережили развод или расставание с партнёром?</legend>
+        <div class="psy-question__answers">
+          <label><input type="radio" name="q9" value="yes">Да</label>
+          <label><input type="radio" name="q9" value="no">Нет</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="psy-question">
+        <legend><span>10</span> Вы давно чувствуете потребность обратиться к психологу?</legend>
+        <div class="psy-question__answers">
+          <label><input type="radio" name="q10" value="yes">Да</label>
+          <label><input type="radio" name="q10" value="no">Нет</label>
+        </div>
+      </fieldset>
+
+      <div class="psy-test__actions">
+        <button type="submit" class="btn">Показать результат <span class="btn__arrow">→</span></button>
+        <button type="button" class="psy-test__reset" id="psyReset">Сбросить ответы</button>
+      </div>
+    </form>
+
+    <section class="psy-result" id="psyResult" hidden aria-live="polite">
+      <div class="psy-result__score"><span id="psyScore">0</span>/10</div>
+      <div>
+        <h3 id="psyResultTitle"></h3>
+        <p id="psyResultText"></p>
+        <div class="psy-result__actions">
+          <a href="index.html#contact" class="btn">Записаться на консультацию <span class="btn__arrow">→</span></a>
+          <a href="https://t.me/morodenko" target="_blank" rel="noopener" class="psy-result__link">Написать в Telegram</a>
+        </div>
+      </div>
+    </section>
+  </section>
+</main>
+
+<footer class="footer test-footer">
+  <div class="container">
+    <div class="footer__bottom" style="border-top: none; padding-top: 0;">
+      <div>© 2008—2026 · Мороденко Евгения Васильевна</div>
+      <div><a href="privacy.html" class="privacy-link">Политика конфиденциальности</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var toggle = document.getElementById('testThemeToggle');
+    if (toggle){
+      toggle.addEventListener('click', function(){
+        document.documentElement.classList.add('theme-anim');
+        var current = document.documentElement.getAttribute('data-theme') || 'light';
+        var next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch(e){}
+        setTimeout(function(){ document.documentElement.classList.remove('theme-anim'); }, 500);
+      });
+    }
+
+    var form = document.getElementById('psyTest');
+    if (!form) return;
+
+    var questions = Array.from(form.querySelectorAll('.psy-question'));
+    var answeredEl = document.getElementById('psyAnswered');
+    var progressEl = document.getElementById('psyProgress');
+    var result = document.getElementById('psyResult');
+    var scoreEl = document.getElementById('psyScore');
+    var titleEl = document.getElementById('psyResultTitle');
+    var textEl = document.getElementById('psyResultText');
+    var reset = document.getElementById('psyReset');
+
+    function getAnswered(){
+      return questions.filter(function(q){
+        return q.querySelector('input:checked');
+      }).length;
+    }
+
+    function updateProgress(){
+      var answered = getAnswered();
+      answeredEl.textContent = answered;
+      progressEl.style.width = (answered / questions.length * 100) + '%';
+      questions.forEach(function(q){
+        q.classList.toggle('is-answered', !!q.querySelector('input:checked'));
+        q.classList.remove('is-missing');
+      });
+    }
+
+    form.addEventListener('change', updateProgress);
+    updateProgress();
+
+    form.addEventListener('submit', function(event){
+      event.preventDefault();
+      var unanswered = questions.find(function(q){ return !q.querySelector('input:checked'); });
+      if (unanswered){
+        unanswered.classList.add('is-missing');
+        unanswered.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      var yesCount = form.querySelectorAll('input[value="yes"]:checked').length;
+      scoreEl.textContent = yesCount;
+      result.hidden = false;
+      result.classList.toggle('psy-result--high', yesCount >= 4);
+      result.classList.toggle('psy-result--low', yesCount < 4);
+
+      if (yesCount >= 4){
+        titleEl.textContent = 'Похоже, поддержка сейчас действительно может быть нужна';
+        textEl.textContent = 'Вы ответили "Да" на 4 или больше вопросов. Это не диагноз, но хороший повод не оставаться с переживаниями в одиночку и обсудить ситуацию со специалистом.';
+      } else {
+        titleEl.textContent = 'Сейчас можно начать с бережного наблюдения за собой';
+        textEl.textContent = 'Ответов "Да" меньше четырёх. Если тема всё равно беспокоит, можно прийти на консультацию с любым уровнем неопределённости - даже без готового запроса.';
+      }
+
+      result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    reset.addEventListener('click', function(){
+      form.reset();
+      result.hidden = true;
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  })();
+</script>
+
+</body>
+</html>
