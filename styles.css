@@ -86,6 +86,8 @@
 }
 .theme-anim .logo,
 .theme-anim .logo *,
+.theme-anim .hero .display,
+.theme-anim .hero .display *,
 .theme-anim .theme-toggle,
 .theme-anim .theme-toggle *{
   transition-property: transform, opacity !important;
