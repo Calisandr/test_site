@@ -826,13 +826,13 @@
       //  1–2    → no discount (single sessions)
       //  3–4    → 7 500 ₽ for 3 → 2500/sess
       //  5–9    → 12 000 ₽ for 5 → 2400/sess
-      //  10+    → 22 000 ₽ for 10 → 2200/sess
+      //  10+    → 23 000 ₽ for 10 → 2300/sess
       const base = n * PRICE_PER_SESSION;
       let finalPrice;
       if (n <= 2)        finalPrice = base;
       else if (n < 5)    finalPrice = 7500 + (n - 3) * 2500;         // extrapolate from 3-pack rate
       else if (n < 10)   finalPrice = 12000 + (n - 5) * 2400;        // extrapolate from 5-pack rate
-      else               finalPrice = Math.round(22000 + (n - 10) * 2200); // extrapolate from 10-pack rate
+      else               finalPrice = Math.round(23000 + (n - 10) * 2300); // extrapolate from 10-pack rate
 
       const saved = base - finalPrice;
       const pct   = base > 0 ? Math.round(saved / base * 100) : 0;
