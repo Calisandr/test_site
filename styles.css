@@ -2271,10 +2271,10 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 .test-page{
   width: min(1180px, calc(100% - 48px));
   margin: 0 auto;
-  padding: 24px 0 90px;
+  padding: 28px 0 96px;
   display: grid;
-  grid-template-columns: minmax(0, .95fr) minmax(420px, .8fr);
-  gap: clamp(44px, 6vw, 88px);
+  grid-template-columns: minmax(0, .82fr) minmax(520px, .95fr);
+  gap: clamp(48px, 6.6vw, 96px);
   align-items: start;
 }
 .test-intro{
@@ -2297,18 +2297,18 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 }
 .test-intro h1{
   font-family: var(--f-serif);
-  font-size: clamp(3rem, 6.4vw, 6rem);
+  font-size: clamp(3rem, 5.8vw, 5.45rem);
   font-weight: 300;
-  line-height: .94;
+  line-height: .97;
   letter-spacing: -0.02em;
-  margin: 22px 0 28px;
-  max-width: 760px;
+  margin: 24px 0 30px;
+  max-width: 690px;
 }
 .test-intro p{
   color: var(--ink-soft);
   font-size: 1.12rem;
-  line-height: 1.7;
-  max-width: 62ch;
+  line-height: 1.78;
+  max-width: 55ch;
   margin: 0;
 }
 .test-intro__facts{
@@ -2358,7 +2358,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   object-position: center top;
 }
 .psy-test-shell{
-  margin-top: 54px;
+  margin-top: 38px;
   background: var(--paper);
   border: 1px solid var(--line-soft);
   border-radius: 8px;
@@ -2378,17 +2378,17 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   justify-content: space-between;
-  gap: 28px;
+  gap: 34px;
   align-items: flex-start;
-  padding: 34px 42px 0;
+  padding: 42px 50px 0;
 }
 .psy-test-shell h2{
   font-family: var(--f-serif);
-  font-size: clamp(1.45rem, 2.5vw, 2.1rem);
+  font-size: clamp(1.55rem, 2.35vw, 2.25rem);
   font-weight: 400;
-  line-height: 1.08;
-  margin: 16px 0 0;
-  max-width: 760px;
+  line-height: 1.16;
+  margin: 18px 0 0;
+  max-width: 13.5em;
 }
 .psy-test-progress{
   font-family: var(--f-serif);
@@ -2400,7 +2400,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 .psy-test-bar{
   height: 3px;
   background: var(--line-soft);
-  margin: 28px 42px 0;
+  margin: 34px 50px 0;
   overflow: hidden;
 }
 .psy-test-bar span{
@@ -2412,16 +2412,16 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 }
 .psy-test{
   display: block;
-  padding: 0 42px 42px;
+  padding: 0 50px 48px;
 }
 .psy-question{
   display: none;
   grid-template-columns: 1fr;
-  gap: 28px;
+  gap: 38px;
   align-content: center;
-  min-height: 250px;
+  min-height: 330px;
   margin: 0;
-  padding: 30px 0 28px;
+  padding: 44px 0 40px;
   border: 0;
   border-bottom: 0;
   animation: fadeUp .36s var(--ease-out);
@@ -2431,42 +2431,48 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 }
 .psy-question.is-missing{
   box-shadow: inset 4px 0 0 var(--terracotta);
-  padding-left: 20px;
+  padding-left: 24px;
 }
 .psy-question legend{
   display: block;
   color: var(--ink);
   font-family: var(--f-serif);
-  font-size: clamp(1.45rem, 3vw, 2.05rem);
+  font-size: clamp(1.65rem, 2.75vw, 2.45rem);
   font-weight: 400;
-  line-height: 1.12;
-  max-width: 17ch;
+  line-height: 1.18;
+  max-width: 24ch;
 }
 .psy-question legend span{
-  display: block;
-  margin: 0 0 18px;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 0 24px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
   color: var(--terracotta);
   font-family: var(--f-serif);
-  font-size: 1.05rem;
-  letter-spacing: .18em;
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: .08em;
 }
 .psy-question__answers{
   display: grid;
   grid-template-columns: repeat(2, minmax(86px, 1fr));
-  gap: 14px;
+  gap: 16px;
 }
 .psy-question__answers label{
   position: relative;
   display: grid;
   place-items: center;
-  min-height: 66px;
-  padding: 18px 22px;
+  min-height: 76px;
+  padding: 20px 24px;
   border: 1px solid var(--line);
   border-radius: 8px;
   color: var(--ink-soft);
   background: var(--bg);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.04rem;
   transition: transform .25s var(--ease-out), background .2s, color .2s, border-color .2s, box-shadow .2s;
 }
 .psy-question__answers label:hover{
@@ -2488,10 +2494,10 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 .psy-test__actions{
   display: grid;
   grid-template-columns: auto auto minmax(0, 1fr);
-  gap: 14px;
+  gap: 16px;
   align-items: center;
   margin-top: 0;
-  padding-top: 22px;
+  padding-top: 28px;
   border-top: 1px solid var(--line-soft);
 }
 .psy-test__actions [hidden]{ display: none !important; }
@@ -2503,7 +2509,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   background: transparent;
   border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 12px 18px;
+  padding: 14px 20px;
   color: var(--ink-soft);
   font-family: var(--f-sans);
   font-weight: 600;
@@ -2522,7 +2528,8 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   grid-column: 1 / -1;
   order: -1;
   color: var(--ink-mute);
-  font-size: .9rem;
+  font-size: .93rem;
+  line-height: 1.55;
   text-align: left;
 }
 .psy-test__reset{
@@ -3129,6 +3136,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   .test-page{ display: block; }
   .test-intro{ min-height: auto; position: static; }
   .test-intro__visual{ min-height: 360px; max-height: 520px; }
+  .psy-test-shell{ margin-top: 56px; }
 }
 
 @media (max-width: 640px){
@@ -3194,29 +3202,86 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   .test-nav__cta{ padding: 9px 12px; font-size: .76rem; gap: 7px; }
   .test-nav .theme-toggle{ width: 36px; height: 36px; min-width: 36px; }
   .test-page{ padding: 18px 0 70px; }
-  .test-intro{ gap: 26px; }
-  .test-intro__copy{ padding: 22px 0 0; }
-  .test-back{ margin-bottom: 28px; }
-  .test-intro h1{ font-size: clamp(2.4rem, 13vw, 4rem); }
-  .test-intro p{ font-size: 1rem; }
+  .test-intro{ gap: 28px; }
+  .test-intro__copy{ padding: 18px 0 0; }
+  .test-back{ margin-bottom: 26px; }
+  .test-intro h1{
+    font-size: clamp(2.35rem, 11.5vw, 3.45rem);
+    line-height: 1.02;
+    margin: 20px 0 24px;
+    max-width: 10.5em;
+  }
+  .test-intro p{
+    font-size: 1.03rem;
+    line-height: 1.72;
+    max-width: 34ch;
+  }
+  .test-intro__facts{
+    gap: 8px;
+    margin-top: 28px;
+  }
+  .test-intro__facts span{
+    padding: 8px 12px;
+    font-size: .82rem;
+  }
   .test-intro__visual{ display: none; }
-  .psy-test-shell{ margin-top: 42px; padding: 0; }
-  .psy-test-shell__head{ display: grid; grid-template-columns: 1fr; gap: 18px; padding: 30px 24px 0; }
-  .psy-test-progress{ font-size: 2.4rem; }
-  .psy-test-bar{ margin: 26px 24px 0; }
-  .psy-test{ padding: 0 24px 30px; }
+  .psy-test-shell{ margin-top: 38px; padding: 0; }
+  .psy-test-shell__head{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 18px;
+    padding: 32px 24px 0;
+  }
+  .psy-test-shell h2{
+    font-size: clamp(1.45rem, 6.6vw, 2rem);
+    line-height: 1.22;
+    max-width: 11.5em;
+    margin-top: 16px;
+  }
+  .psy-test-progress{
+    font-size: 2.15rem;
+    align-self: start;
+    padding-top: 2px;
+  }
+  .psy-test-bar{ margin: 28px 24px 0; }
+  .psy-test{ padding: 0 24px 32px; }
   .psy-question{
     grid-template-columns: 1fr;
-    gap: 24px;
-    min-height: 270px;
-    padding: 32px 0 26px;
+    gap: 30px;
+    min-height: 338px;
+    padding: 38px 0 34px;
   }
-  .psy-question legend{ font-size: clamp(1.45rem, 8vw, 2rem); max-width: none; }
+  .psy-question.is-missing{ padding-left: 18px; }
+  .psy-question legend{
+    font-size: clamp(1.48rem, 7vw, 2.08rem);
+    line-height: 1.2;
+    max-width: 13.5em;
+  }
+  .psy-question legend span{
+    width: 42px;
+    height: 42px;
+    margin-bottom: 22px;
+    font-size: .9rem;
+  }
   .psy-question__answers{ grid-template-columns: 1fr 1fr; }
-  .psy-question__answers label{ min-height: 68px; }
-  .psy-test__actions{ grid-template-columns: 1fr 1fr; gap: 10px; }
+  .psy-question__answers label{
+    min-height: 72px;
+    padding: 18px 14px;
+    font-size: 1rem;
+  }
+  .psy-test__actions{
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding-top: 26px;
+  }
   .psy-test__actions [hidden]{ display: none !important; }
-  .psy-test__hint{ grid-column: 1 / -1; order: -1; text-align: left; }
+  .psy-test__hint{
+    grid-column: 1 / -1;
+    order: -1;
+    text-align: left;
+    font-size: .9rem;
+    line-height: 1.55;
+  }
   .psy-test__reset{ grid-column: 1 / -1; justify-self: center; }
   .psy-test__nav-btn,
   .psy-test__actions .btn{ width: 100%; justify-content: center; }
