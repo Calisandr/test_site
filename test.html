@@ -40,7 +40,10 @@
     </span>
   </a>
   <div class="test-nav__actions">
-    <a href="index.html#contact" class="test-nav__link">Записаться</a>
+    <a href="index.html#contact" class="btn test-nav__cta">
+      Записаться
+      <span class="btn__arrow">→</span>
+    </a>
     <button class="theme-toggle" id="testThemeToggle" aria-label="Переключить тёмную/светлую тему" title="Тема">
       <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="4"/>
@@ -83,7 +86,7 @@
         <h2 id="psyTestTitle">Отметьте, что похоже на ваше состояние сейчас</h2>
       </div>
       <div class="psy-test-progress" aria-live="polite">
-        <span id="psyAnswered">0</span>/10
+        <span id="psyAnswered">1</span>/10
       </div>
     </div>
 
@@ -173,7 +176,10 @@
       </fieldset>
 
       <div class="psy-test__actions">
-        <button type="submit" class="btn">Показать результат <span class="btn__arrow">→</span></button>
+        <button type="button" class="psy-test__nav-btn" id="psyPrev">← Назад</button>
+        <div class="psy-test__hint" id="psyHint">Можно выбрать то, что ближе сейчас</div>
+        <button type="button" class="btn" id="psyNext">Дальше <span class="btn__arrow">→</span></button>
+        <button type="submit" class="btn" id="psySubmit">Показать результат <span class="btn__arrow">→</span></button>
         <button type="button" class="psy-test__reset" id="psyReset">Сбросить ответы</button>
       </div>
     </form>
@@ -226,6 +232,11 @@
     var titleEl = document.getElementById('psyResultTitle');
     var textEl = document.getElementById('psyResultText');
     var reset = document.getElementById('psyReset');
+    var prev = document.getElementById('psyPrev');
+    var next = document.getElementById('psyNext');
+    var submit = document.getElementById('psySubmit');
+    var hint = document.getElementById('psyHint');
+    var currentIndex = 0;
 
     function getAnswered(){
       return questions.filter(function(q){
@@ -233,25 +244,63 @@
       }).length;
     }
 
+    function renderQuestion(scroll){
+      questions.forEach(function(q, index){
+        q.classList.toggle('is-current', index === currentIndex);
+      });
+      answeredEl.textContent = currentIndex + 1;
+      progressEl.style.width = ((currentIndex + 1) / questions.length * 100) + '%';
+      prev.disabled = currentIndex === 0;
+      next.hidden = currentIndex === questions.length - 1;
+      submit.hidden = currentIndex !== questions.length - 1;
+      hint.textContent = questions[currentIndex].querySelector('input:checked')
+        ? 'Ответ сохранён'
+        : 'Можно выбрать то, что ближе сейчас';
+      if (scroll){
+        document.querySelector('.psy-test-shell').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
     function updateProgress(){
-      var answered = getAnswered();
-      answeredEl.textContent = answered;
-      progressEl.style.width = (answered / questions.length * 100) + '%';
       questions.forEach(function(q){
         q.classList.toggle('is-answered', !!q.querySelector('input:checked'));
         q.classList.remove('is-missing');
       });
+      renderQuestion(false);
+    }
+
+    function canLeaveCurrent(){
+      var current = questions[currentIndex];
+      if (current.querySelector('input:checked')) return true;
+      current.classList.add('is-missing');
+      hint.textContent = 'Выберите один вариант, чтобы продолжить';
+      return false;
+    }
+
+    function goTo(index){
+      currentIndex = Math.max(0, Math.min(questions.length - 1, index));
+      renderQuestion(true);
     }
 
     form.addEventListener('change', updateProgress);
     updateProgress();
 
+    next.addEventListener('click', function(){
+      if (canLeaveCurrent()) goTo(currentIndex + 1);
+    });
+
+    prev.addEventListener('click', function(){
+      goTo(currentIndex - 1);
+    });
+
     form.addEventListener('submit', function(event){
       event.preventDefault();
       var unanswered = questions.find(function(q){ return !q.querySelector('input:checked'); });
       if (unanswered){
+        currentIndex = questions.indexOf(unanswered);
+        renderQuestion(true);
         unanswered.classList.add('is-missing');
-        unanswered.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        hint.textContent = 'Остался вопрос без ответа';
         return;
       }
 
@@ -269,14 +318,17 @@
         textEl.textContent = 'Ответов "Да" меньше четырёх. Если тема всё равно беспокоит, можно прийти на консультацию с любым уровнем неопределённости - даже без готового запроса.';
       }
 
+      form.classList.add('is-complete');
       result.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
 
     reset.addEventListener('click', function(){
       form.reset();
       result.hidden = true;
+      form.classList.remove('is-complete');
+      currentIndex = 0;
       updateProgress();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.querySelector('.psy-test-shell').scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   })();
 </script>
