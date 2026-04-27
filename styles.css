@@ -1067,7 +1067,6 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   display: flex;
   flex-direction: column;
   position: relative;
-  cursor: pointer;
   transition: transform .55s cubic-bezier(.16,1,.3,1), box-shadow .55s cubic-bezier(.16,1,.3,1);
   border: 1px solid var(--line-soft);
   overflow: hidden;
