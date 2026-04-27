@@ -347,6 +347,31 @@
     testTrack.addEventListener('touchstart', stopAuto, { passive: true });
   }
 
+  /* ---- Client review screenshots: soft stagger reveal ---- */
+  const proofCards = Array.from(document.querySelectorAll('.proof-card'));
+  if (proofCards.length){
+    if (reduceMotion){
+      proofCards.forEach(card => card.classList.add('is-visible'));
+    } else if ('IntersectionObserver' in window){
+      proofCards.forEach(card => card.classList.add('is-prepping'));
+      const proofIO = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const card = entry.target;
+          const i = proofCards.indexOf(card);
+          setTimeout(() => {
+            card.classList.add('is-visible');
+            card.classList.remove('is-prepping');
+          }, Math.min(i % 6, 5) * 90);
+          proofIO.unobserve(card);
+        });
+      }, { threshold: 0.18, rootMargin: '0px 0px -70px 0px' });
+      proofCards.forEach(card => proofIO.observe(card));
+    } else {
+      proofCards.forEach(card => card.classList.add('is-visible'));
+    }
+  }
+
   /* ---- FAQ + Guide details exclusive open (optional) ---- */
   // No exclusivity — let users open multiple
 
