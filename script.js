@@ -811,7 +811,7 @@
     const ctaCount   = document.getElementById('calcCtaCount');
     if (!slider) return;
 
-    const PRICE_PER_SESSION = 5000;
+    const PRICE_PER_SESSION = 3000;
 
     function pluralSessions(n){
       const m10 = n % 10, m100 = n % 100;
@@ -822,15 +822,17 @@
     function fmt(n){ return new Intl.NumberFormat('ru-RU').format(n) + ' ₽'; }
 
     function calculate(n){
-      // Pricing tiers based on real b17 packages:
-      //  1–4    → no discount (single sessions)
-      //  5–9    → 22 000 ₽ for 5 → 4400/sess
-      //  10+    → 40 000 ₽ for 10 → 4000/sess
+      // Pricing tiers from the current consultation price list.
+      //  1–2    → no discount (single sessions)
+      //  3–4    → 7 500 ₽ for 3 → 2500/sess
+      //  5–9    → 12 000 ₽ for 5 → 2400/sess
+      //  10+    → 22 000 ₽ for 10 → 2200/sess
       const base = n * PRICE_PER_SESSION;
       let finalPrice;
-      if (n <= 4)        finalPrice = base;
-      else if (n < 10)   finalPrice = 22000 + (n - 5) * 4400;        // extrapolate from 5-pack rate
-      else               finalPrice = Math.round(40000 + (n - 10) * 4000); // extrapolate from 10-pack rate
+      if (n <= 2)        finalPrice = base;
+      else if (n < 5)    finalPrice = 7500 + (n - 3) * 2500;         // extrapolate from 3-pack rate
+      else if (n < 10)   finalPrice = 12000 + (n - 5) * 2400;        // extrapolate from 5-pack rate
+      else               finalPrice = Math.round(22000 + (n - 10) * 2200); // extrapolate from 10-pack rate
 
       const saved = base - finalPrice;
       const pct   = base > 0 ? Math.round(saved / base * 100) : 0;
