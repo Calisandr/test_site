@@ -3579,7 +3579,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   display: none;
   position: fixed;
   top: 18px;
-  right: 72px;
+  right: 80px;             /* was 72 — shifted a touch further from the burger */
   z-index: 60;
   width: 40px; height: 40px;
   background: var(--paper);
@@ -3594,14 +3594,14 @@ body.nav-scrolled .theme-toggle--mobile{ top: 12px; }
 @media (max-width: 640px){
   .theme-toggle--mobile{
     top: 16px;
-    right: 62px;
+    right: 70px;           /* was 62 — same shift on phones */
     width: 36px;
     height: 36px;
     min-width: 36px;
   }
   body.nav-scrolled .theme-toggle--mobile{ top: 10px; }
   .nav .logo{
-    max-width: calc(100vw - 132px);
+    max-width: calc(100vw - 140px);   /* matches the new toggle offset */
   }
   .nav .logo__name{
     overflow: hidden;
