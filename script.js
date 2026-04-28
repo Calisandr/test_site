@@ -22,7 +22,8 @@
   /* ============================================== */
   const themeToggles = [
     document.getElementById('themeToggle'),
-    document.getElementById('themeToggleMobile')
+    document.getElementById('themeToggleMobile'),
+    document.getElementById('legalThemeToggle')
   ].filter(Boolean);
 
   function getStoredTheme(){
@@ -123,29 +124,32 @@
   const burger = document.getElementById('burger');
   const navMobile = document.getElementById('navMobile');
   function closeMobile(){
+    if (!burger || !navMobile) return;
     burger.classList.remove('active');
     navMobile.classList.remove('open');
     document.body.classList.remove('menu-open');
     document.body.style.overflow = '';
     if (lenis) lenis.start();
   }
-  burger.addEventListener('click', e => {
-    e.stopPropagation();
-    const isOpen = navMobile.classList.toggle('open');
-    burger.classList.toggle('active', isOpen);
-    document.body.classList.toggle('menu-open', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-    if (lenis){ isOpen ? lenis.stop() : lenis.start(); }
-  });
-  navMobile.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobile));
-  document.addEventListener('click', e => {
-    if (navMobile.classList.contains('open') &&
-        !navMobile.contains(e.target) &&
-        !burger.contains(e.target)) closeMobile();
-  });
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && navMobile.classList.contains('open')) closeMobile();
-  });
+  if (burger && navMobile){
+    burger.addEventListener('click', e => {
+      e.stopPropagation();
+      const isOpen = navMobile.classList.toggle('open');
+      burger.classList.toggle('active', isOpen);
+      document.body.classList.toggle('menu-open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+      if (lenis){ isOpen ? lenis.stop() : lenis.start(); }
+    });
+    navMobile.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobile));
+    document.addEventListener('click', e => {
+      if (navMobile.classList.contains('open') &&
+          !navMobile.contains(e.target) &&
+          !burger.contains(e.target)) closeMobile();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && navMobile.classList.contains('open')) closeMobile();
+    });
+  }
 
   /* ---- Reveal on scroll ---- */
   const revealEls = document.querySelectorAll('.reveal');
