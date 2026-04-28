@@ -1080,15 +1080,20 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 
 .documents-grid{
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 22px;
-  align-items: start;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: stretch;
 }
 .doc-card{
   margin: 0;
-  padding: 10px;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(185px, 44%) minmax(0, 1fr);
+  min-height: 190px;
+  padding: 8px;
   border: 1px solid var(--line-soft);
-  border-radius: var(--radius-md);
+  border-radius: 18px;
   background: linear-gradient(180deg, var(--paper), color-mix(in srgb, var(--paper) 88%, var(--bg-deep)));
   box-shadow: var(--shadow-card);
   transform-origin: center 70%;
@@ -1098,9 +1103,18 @@ body.nav-scrolled .nav__burger{ top: 12px; }
               border-color .35s var(--ease-out);
   will-change: transform, opacity;
 }
+.doc-card::before{
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--terracotta) 76%, transparent), transparent);
+  opacity: .62;
+  pointer-events: none;
+}
 .doc-card.is-prepping{
   opacity: 0;
-  transform: translateY(36px) scale(.97) rotate(.25deg);
+  transform: translateY(30px) scale(.985);
 }
 .doc-card.is-visible{
   opacity: 1;
@@ -1109,18 +1123,20 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 .doc-card__media{
   display: grid;
   place-items: center;
-  aspect-ratio: 3 / 4.08;
+  height: 100%;
+  min-height: 174px;
   overflow: hidden;
-  border-radius: calc(var(--radius-md) - 6px);
+  border-radius: 12px;
   background:
-    linear-gradient(135deg, rgba(255,255,255,.72), rgba(255,255,255,.16)),
-    var(--bg-deep);
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--paper) 94%, #fff),
+      color-mix(in srgb, var(--paper) 86%, var(--bg-deep)));
 }
 .doc-card--landscape .doc-card__media{
-  aspect-ratio: 1.42 / 1;
+  aspect-ratio: auto;
 }
 .doc-card--book .doc-card__media{
-  aspect-ratio: 1.12 / 1;
+  aspect-ratio: auto;
 }
 .doc-card img{
   width: 100%;
@@ -1132,7 +1148,9 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 .doc-card figcaption{
   display: grid;
   gap: 7px;
-  padding: 16px 6px 4px;
+  align-content: center;
+  min-width: 0;
+  padding: 18px 18px 18px 20px;
 }
 .doc-card__kind{
   color: var(--terracotta);
@@ -1144,18 +1162,18 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 .doc-card strong{
   color: var(--ink);
   font-family: var(--f-serif);
-  font-size: 1.08rem;
+  font-size: clamp(1rem, 1.18vw, 1.18rem);
   font-weight: 500;
   line-height: 1.2;
 }
 .doc-card small{
   color: var(--ink-mute);
-  font-size: .78rem;
+  font-size: .82rem;
   line-height: 1.45;
 }
 @media (hover: hover) and (pointer: fine){
   .doc-card.is-visible:hover{
-    transform: translateY(-10px) scale(1.012);
+    transform: translateY(-8px) scale(1.01);
     border-color: color-mix(in srgb, var(--terracotta) 42%, var(--line-soft));
     box-shadow: 0 34px 62px -34px rgba(56, 38, 24, .5), 0 16px 28px -24px rgba(56, 38, 24, .36);
   }
@@ -1173,8 +1191,9 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   color: var(--ink-mute);
   font-size: .92rem;
 }
-@media (max-width: 1180px){
-  .documents-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 1080px){
+  .documents-grid{ grid-template-columns: 1fr; }
+  .doc-card{ grid-template-columns: minmax(190px, 38%) minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce){
   .doc-card,
@@ -3178,7 +3197,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   .faq__head{ position: static; }
   .issues__grid,
   .planners__grid{ grid-template-columns: repeat(2, 1fr); }
-  .documents-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .documents-grid{ grid-template-columns: 1fr; }
   .credentials-showcase{ grid-template-columns: 1fr; align-items: start; }
   .credentials-showcase__meta{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .process__steps{ grid-template-columns: repeat(2, 1fr); gap: 40px 20px; }
@@ -3377,8 +3396,10 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 
   .credentials-showcase__meta{ grid-template-columns: 1fr; }
   .credentials-showcase__meta div{ border-radius: 14px; }
-  .doc-card{ padding: 8px; border-radius: 12px; }
-  .doc-card__media{ border-radius: 8px; }
+  .doc-card{ grid-template-columns: 1fr; min-height: 0; padding: 8px; border-radius: 14px; }
+  .doc-card__media{ height: auto; min-height: 0; aspect-ratio: 1.34 / 1; border-radius: 8px; }
+  .doc-card:not(.doc-card--landscape):not(.doc-card--book) .doc-card__media{ aspect-ratio: 3 / 4.08; }
+  .doc-card figcaption{ padding: 16px 8px 6px; }
   .doc-card strong{ font-size: 1rem; }
 
   .testimonials__head{ gap: 24px; }
