@@ -3057,9 +3057,18 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   border-bottom: 1px solid var(--surface-dark-line);
 }
 .footer__brand{ padding-right: 40px; }
+.footer__brand .logo{
+  color: var(--surface-dark-text);
+  align-items: flex-start;
+}
 .footer__brand .logo__mark{
   background: var(--gold);
   color: var(--surface-dark);
+}
+.footer__brand .logo__name{
+  display: block;
+  color: var(--surface-dark-text);
+  padding-top: 1px;
 }
 .footer__brand .logo__name small{ color: var(--surface-dark-mute); }
 .footer__brand p{
