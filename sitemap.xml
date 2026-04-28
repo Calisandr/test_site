@@ -2,28 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://test-site-pi-wheat.vercel.app/</loc>
-    <lastmod>2026-04-27</lastmod>
+    <loc>https://morodenko-psy.vercel.app/</loc>
+    <lastmod>2026-04-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://test-site-pi-wheat.vercel.app/assets/og-image.jpg</image:loc>
+      <image:loc>https://morodenko-psy.vercel.app/assets/og-image.jpg</image:loc>
       <image:title>Мороденко Евгения — психолог, кандидат психологических наук</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://test-site-pi-wheat.vercel.app/assets/portrait-academic.jpg</image:loc>
+      <image:loc>https://morodenko-psy.vercel.app/assets/portrait-academic.jpg</image:loc>
       <image:title>Евгения Мороденко в кабинете</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://test-site-pi-wheat.vercel.app/test.html</loc>
-    <lastmod>2026-04-27</lastmod>
+    <loc>https://morodenko-psy.vercel.app/test.html</loc>
+    <lastmod>2026-04-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://test-site-pi-wheat.vercel.app/privacy.html</loc>
-    <lastmod>2026-04-26</lastmod>
+    <loc>https://morodenko-psy.vercel.app/privacy.html</loc>
+    <lastmod>2026-04-28</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

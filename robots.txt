@@ -8,5 +8,5 @@ User-agent: Yandex
 Allow: /
 Disallow: /api/
 
-Sitemap: https://test-site-pi-wheat.vercel.app/sitemap.xml
-Host: test-site-pi-wheat.vercel.app
+Sitemap: https://morodenko-psy.vercel.app/sitemap.xml
+Host: morodenko-psy.vercel.app
