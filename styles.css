@@ -1792,7 +1792,14 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   background: transparent;
   color: var(--gold);
   border: 1px solid var(--gold);
-  font-size: 1.35rem;
+}
+.services__note-icon--gift svg{
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  stroke-width: 1.55;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 /* Inline links inside any services note — animated underline on hover */
 .services__note a{
