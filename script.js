@@ -8,10 +8,31 @@
   /* ============================================== */
   /* ---- ANALYTICS HELPER (Yandex.Metrika) ---- */
   /* ============================================== */
-  const METRIKA_ID = 99999999; // ← replace with real counter ID in HTML <head> too
+  const METRIKA_ID = Number(window.MORODENKO_METRIKA_ID) || null;
+  if (METRIKA_ID){
+    (function(m,e,t,r,i,k,a){
+      m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();
+      for (let j = 0; j < document.scripts.length; j++){
+        if (document.scripts[j].src === r) return;
+      }
+      k=e.createElement(t);
+      a=e.getElementsByTagName(t)[0];
+      k.async=1;
+      k.src=r;
+      a.parentNode.insertBefore(k,a);
+    })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
+
+    window.ym(METRIKA_ID, 'init', {
+      clickmap: true,
+      trackLinks: true,
+      accurateTrackBounce: true,
+      webvisor: true
+    });
+  }
   function track(goal, params){
     try {
-      if (typeof window.ym === 'function'){
+      if (METRIKA_ID && typeof window.ym === 'function'){
         window.ym(METRIKA_ID, 'reachGoal', goal, params);
       }
     } catch(_) {}
@@ -54,10 +75,10 @@
   /* ---- Loader ---- */
   const loader = document.getElementById('loader');
   window.addEventListener('load', () => {
-    setTimeout(() => loader && loader.classList.add('is-hidden'), 600);
+    setTimeout(() => loader && loader.classList.add('is-hidden'), 180);
   });
   // safety
-  setTimeout(() => loader && loader.classList.add('is-hidden'), 3000);
+  setTimeout(() => loader && loader.classList.add('is-hidden'), 1400);
 
   /* ---- Lenis smooth scroll ---- */
   let lenis = null;
@@ -401,6 +422,7 @@
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'custom-select__button';
+    button.setAttribute('role', 'combobox');
     button.setAttribute('aria-haspopup', 'listbox');
     button.setAttribute('aria-expanded', 'false');
 
@@ -414,13 +436,23 @@
 
     const baseId = select.id || select.name || `select-${Math.random().toString(36).slice(2)}`;
     button.id = `${baseId}-custom-button`;
+    value.id = `${baseId}-custom-value`;
     list.id = `${baseId}-custom-list`;
     button.setAttribute('aria-controls', list.id);
+
+    const field = select.closest('.field');
+    const label = field?.querySelector(`label[for="${select.id}"]`);
+    if (label){
+      if (!label.id) label.id = `${baseId}-label`;
+      list.setAttribute('aria-labelledby', label.id);
+      button.setAttribute('aria-labelledby', `${label.id} ${value.id}`);
+    }
 
     options.forEach((option, index) => {
       const item = document.createElement('div');
       item.className = 'custom-select__option';
       item.setAttribute('role', 'option');
+      item.id = `${baseId}-custom-option-${index}`;
       item.dataset.index = String(index);
       item.textContent = option.textContent;
       item.addEventListener('mousemove', () => setActive(index, false));
@@ -452,6 +484,7 @@
       items.forEach((item, itemIndex) => {
         item.classList.toggle('is-active', itemIndex === activeIndex);
       });
+      button.setAttribute('aria-activedescendant', items[activeIndex]?.id || '');
       if (scroll && widget.classList.contains('is-open')){
         items[activeIndex]?.scrollIntoView({ block: 'nearest' });
       }
@@ -517,8 +550,6 @@
       if (!widget.contains(event.target)) close();
     });
 
-    const field = select.closest('.field');
-    const label = field?.querySelector(`label[for="${select.id}"]`);
     label?.addEventListener('click', event => {
       event.preventDefault();
       button.focus({ preventScroll: true });
@@ -542,7 +573,7 @@
     });
   });
 
-  /* ---- Form: real submission via Web3Forms ---- */
+  /* ---- Form: real submission via Vercel API + Resend ---- */
   const form = document.getElementById('bookForm');
   if (form){
     const success    = document.getElementById('formSuccess');
@@ -584,12 +615,19 @@
 
       const name  = form.querySelector('#fName').value.trim();
       const phone = form.querySelector('#fPhone').value.trim();
+      const consent = form.querySelector('#fConsent');
+      const consentWrap = document.getElementById('formConsentWrap');
 
-      // Local validation: name + phone are required
+      // Local validation: name, phone and consent are required
       let invalid = false;
       if (!name)  { flagInvalid(form.querySelector('#fName'));  invalid = true; }
       if (!phone || phone.replace(/\D/g, '').length < 11) {
         flagInvalid(form.querySelector('#fPhone'));
+        invalid = true;
+      }
+      if (consent && !consent.checked){
+        consentWrap?.classList.add('is-invalid');
+        setTimeout(() => consentWrap?.classList.remove('is-invalid'), 2500);
         invalid = true;
       }
       if (invalid) return;
@@ -710,6 +748,8 @@
     if (typeof THREE === 'undefined' || reduceMotion) return;
     const container = document.getElementById('bg3d');
     if (!container) return;
+    if (container.dataset.threeReady === 'true') return;
+    container.dataset.threeReady = 'true';
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'low-power' });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -811,7 +851,44 @@
       else if (!running){ running = true; requestAnimationFrame(loop); }
     });
   }
-  init3DBackground();
+  let threeLoader = null;
+  function loadThree(){
+    if (typeof window.THREE !== 'undefined') return Promise.resolve();
+    if (!threeLoader){
+      threeLoader = import('https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js')
+        .then(module => {
+          window.THREE = module;
+        });
+    }
+    return threeLoader;
+  }
+
+  function shouldRun3DBackground(){
+    if (!document.getElementById('bg3d') || reduceMotion) return false;
+    if (window.matchMedia('(max-width: 640px)').matches) return false;
+    if (navigator.connection?.saveData) return false;
+    return true;
+  }
+
+  function schedule3DBackground(){
+    if (!shouldRun3DBackground()) return;
+    const run = () => {
+      loadThree()
+        .then(init3DBackground)
+        .catch(() => {});
+    };
+    const start = () => {
+      if ('requestIdleCallback' in window){
+        requestIdleCallback(run, { timeout: 2200 });
+      } else {
+        setTimeout(run, 900);
+      }
+    };
+
+    if (document.readyState === 'complete') start();
+    else window.addEventListener('load', start, { once: true });
+  }
+  schedule3DBackground();
 
   /* ============================================== */
   /* ---- PACKAGE CALCULATOR ---- */

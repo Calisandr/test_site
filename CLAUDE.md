@@ -1,37 +1,18 @@
-# Project: Next-Gen Website
+# Project: Morodenko Psychology Website
 
 ## Stack
-- **Framework**: Next.js 15 (App Router) + TypeScript
-- **3D/WebGL**: Three.js + React Three Fiber + Drei
-- **Animations**: GSAP (ScrollTrigger, SplitText, MorphSVG) + Framer Motion
-- **Styling**: Tailwind CSS v4 + CSS custom properties for theming
-- **Shaders**: Custom GLSL shaders for unique visual effects
-- **Audio**: Howler.js for interactive sound design
-- **State**: Zustand for global state
-- **Fonts**: Variable fonts with animation support
+- Static HTML, CSS and vanilla JavaScript.
+- Vercel serverless function in `api/send-lead.js`.
+- Resend for email delivery.
+- GSAP, ScrollTrigger and Lenis for motion and smooth scrolling.
+- Optional deferred Three.js ambient background on desktop.
+- CSS custom properties for light and dark themes.
 
-## Design Principles
-- NO generic templates. Every section must feel hand-crafted
-- Smooth 60fps animations everywhere - no jank
-- Micro-interactions on every interactive element
-- Custom cursor effects
-- Parallax and scroll-driven animations
-- 3D elements integrated naturally, not as gimmicks
-- Dark/light mode with smooth transitions
-- Mobile-first responsive design with touch gestures
-- Performance budget: LCP < 2.5s, CLS < 0.1, FID < 100ms
-
-## Code Standards
-- All components in TypeScript with strict mode
-- Custom hooks for reusable animation logic
-- Lazy loading for heavy 3D scenes
-- Image optimization with next/image and WebP/AVIF
-- Semantic HTML with ARIA labels
-- CSS containment for paint performance
-- Use `will-change` sparingly and only when needed
-
-## MCP Tools Available
-- **Playwright**: Browser testing and visual regression
-- **Context7**: Up-to-date docs for Three.js, GSAP, Next.js, Tailwind
-- **Fetch**: Pull design inspiration, API data, assets
-- **Sequential Thinking**: Complex architecture and design decisions
+## Quality Bar
+- Keep the site fast and calm on mobile first.
+- Preserve semantic landmarks, accessible labels, visible focus states and predictable navigation.
+- Keep the Russian copy professional, warm and legally careful.
+- Do not commit secrets; API keys live only in Vercel environment variables.
+- Avoid unused dependencies and framework-specific docs that do not match this static project.
+- If `styles.css` or `script.js` changes, regenerate `styles.min.css` and `script.min.js` before shipping.
+- After UI changes, check desktop and mobile pages in a real browser.

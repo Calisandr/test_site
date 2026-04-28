@@ -129,7 +129,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="/assets/portrait-academic.webp" type="image/webp">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.min.css">
 
 <!-- ============== ANTI-FLASH for dark theme (must run before <body> renders) ============== -->
 <script>
@@ -142,30 +142,13 @@
   })();
 </script>
 
-<!-- ============== ЯНДЕКС.МЕТРИКА ============== -->
-<!--
-  ЧТОБЫ ВКЛЮЧИТЬ:
-    1. Зайди на metrika.yandex.ru → создай счётчик для https://morodenko-psy.vercel.app
-    2. Скопируй ID счётчика (число вида 99999999)
-    3. Замени все вхождения 99999999 ниже на свой ID
-  Пока ID не настоящий — снипет всё равно подгружается, но данные никуда не льются.
--->
+<!-- ============== YANDEX.METRIKA CONFIG ============== -->
 <script>
-  (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-  m[i].l=1*new Date();
-  for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-  k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-  (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
-
-  ym(99999999, "init", {
-       clickmap:true,
-       trackLinks:true,
-       accurateTrackBounce:true,
-       webvisor:true
-  });
+  // Put the real numeric counter ID here when it is created in Yandex.Metrika.
+  // Until then the analytics script is not loaded, so the site stays clean.
+  window.MORODENKO_METRIKA_ID = null;
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/99999999" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Яндекс.Метрика -->
+<!-- /YANDEX.METRIKA CONFIG -->
 
 </head>
 <body id="top">
@@ -252,6 +235,7 @@
   <a href="#contact">Контакты</a>
 </div>
 
+<main id="main">
 <!-- ============== HERO ============== -->
 <header class="hero">
   <div class="hero__orb hero__orb--1"></div>
@@ -300,7 +284,7 @@
       <div class="portrait-frame">
         <picture>
           <source srcset="assets/portrait-academic.webp" type="image/webp">
-          <img src="assets/portrait-academic.jpg" alt="Евгения Мороденко — кандидат психологических наук, доцент" loading="eager" fetchpriority="high">
+          <img src="assets/portrait-academic.jpg" alt="Евгения Мороденко — кандидат психологических наук, доцент" width="1290" height="793" loading="eager" fetchpriority="high">
         </picture>
       </div>
 
@@ -360,12 +344,12 @@
       <div class="about__card">
         <div class="about__photo">
           <picture>
-            <source srcset="assets/portrait-warm.webp" type="image/webp">
-            <img src="assets/portrait-warm.jpg" alt="Евгения Мороденко" loading="lazy">
+            <source srcset="assets/portrait-warm-square.webp" type="image/webp">
+            <img src="assets/portrait-warm-square.jpg" alt="Евгения Мороденко" width="420" height="420" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="about__role">Психолог · очно в&nbsp;Прокопьевске и&nbsp;онлайн</div>
-        <h3 class="about__name">Евгения <em>Мороденко</em></h3>
+        <p class="about__name">Евгения <em>Мороденко</em></p>
         <div class="about__tags">
           <span class="tag tag--accent">КПТ</span>
           <span class="tag">Тойч</span>
@@ -538,7 +522,7 @@
     <div class="documents-grid" aria-label="Сканы дипломов и сертификатов">
       <figure class="doc-card doc-card--landscape">
         <a class="doc-card__media" href="assets/credentials/diploma-psychologist-kemgu-2004.jpg" target="_blank" rel="noopener">
-          <img src="assets/credentials/diploma-psychologist-kemgu-2004.jpg" alt="Диплом Кемеровского государственного университета: психолог, преподаватель психологии" loading="lazy" decoding="async">
+          <img src="assets/credentials/diploma-psychologist-kemgu-2004.jpg" alt="Диплом Кемеровского государственного университета: психолог, преподаватель психологии" width="900" height="643" loading="lazy" decoding="async">
         </a>
         <figcaption>
           <span class="doc-card__kind">Диплом · 2004</span>
@@ -549,7 +533,7 @@
 
       <figure class="doc-card doc-card--landscape">
         <a class="doc-card__media" href="assets/credentials/degree-candidate-psychology-2014.jpg" target="_blank" rel="noopener">
-          <img src="assets/credentials/degree-candidate-psychology-2014.jpg" alt="Диплом кандидата психологических наук Мороденко Евгении Васильевны" loading="lazy" decoding="async">
+          <img src="assets/credentials/degree-candidate-psychology-2014.jpg" alt="Диплом кандидата психологических наук Мороденко Евгении Васильевны" width="900" height="618" loading="lazy" decoding="async">
         </a>
         <figcaption>
           <span class="doc-card__kind">Учёная степень · 2014</span>
@@ -560,7 +544,7 @@
 
       <figure class="doc-card doc-card--landscape">
         <a class="doc-card__media" href="assets/credentials/title-docent-2018.jpg" target="_blank" rel="noopener">
-          <img src="assets/credentials/title-docent-2018.jpg" alt="Аттестат о присвоении учёного звания доцента Мороденко Евгении Васильевне" loading="lazy" decoding="async">
+          <img src="assets/credentials/title-docent-2018.jpg" alt="Аттестат о присвоении учёного звания доцента Мороденко Евгении Васильевне" width="900" height="557" loading="lazy" decoding="async">
         </a>
         <figcaption>
           <span class="doc-card__kind">Учёное звание · 2018</span>
@@ -571,7 +555,7 @@
 
       <figure class="doc-card doc-card--landscape">
         <a class="doc-card__media" href="assets/credentials/certificate-public-speech-2009.jpg" target="_blank" rel="noopener">
-          <img src="assets/credentials/certificate-public-speech-2009.jpg" alt="Удостоверение о краткосрочном повышении квалификации по профессиональной деятельности и поведению на рынке труда" loading="lazy" decoding="async">
+          <img src="assets/credentials/certificate-public-speech-2009.jpg" alt="Удостоверение о краткосрочном повышении квалификации по профессиональной деятельности и поведению на рынке труда" width="900" height="643" loading="lazy" decoding="async">
         </a>
         <figcaption>
           <span class="doc-card__kind">Повышение квалификации · 2009</span>
@@ -582,7 +566,7 @@
 
       <figure class="doc-card">
         <a class="doc-card__media" href="assets/credentials/certificate-nlp-strategy-2008.jpg" target="_blank" rel="noopener">
-          <img src="assets/credentials/certificate-nlp-strategy-2008.jpg" alt="Свидетельство Института семейной терапии по стратегии НЛП" loading="lazy" decoding="async">
+          <img src="assets/credentials/certificate-nlp-strategy-2008.jpg" alt="Свидетельство Института семейной терапии по стратегии НЛП" width="644" height="900" loading="lazy" decoding="async">
         </a>
         <figcaption>
           <span class="doc-card__kind">Повышение квалификации · 2008</span>
@@ -593,7 +577,7 @@
 
       <figure class="doc-card">
         <a class="doc-card__media" href="assets/credentials/certificate-nlp-influence-2008.jpg" target="_blank" rel="noopener">
-          <img src="assets/credentials/certificate-nlp-influence-2008.jpg" alt="Свидетельство Института семейной терапии по НЛП-стратегиям влияния и сотрудничества" loading="lazy" decoding="async">
+          <img src="assets/credentials/certificate-nlp-influence-2008.jpg" alt="Свидетельство Института семейной терапии по НЛП-стратегиям влияния и сотрудничества" width="645" height="900" loading="lazy" decoding="async">
         </a>
         <figcaption>
           <span class="doc-card__kind">Повышение квалификации · 2008</span>
@@ -604,7 +588,7 @@
 
       <figure class="doc-card">
         <a class="doc-card__media" href="assets/credentials/certificate-ericksonian-hypnosis-2009.jpg" target="_blank" rel="noopener">
-          <img src="assets/credentials/certificate-ericksonian-hypnosis-2009.jpg" alt="Свидетельство Института семейной терапии по эриксоновскому гипнозу" loading="lazy" decoding="async">
+          <img src="assets/credentials/certificate-ericksonian-hypnosis-2009.jpg" alt="Свидетельство Института семейной терапии по эриксоновскому гипнозу" width="643" height="900" loading="lazy" decoding="async">
         </a>
         <figcaption>
           <span class="doc-card__kind">Повышение квалификации · 2009</span>
@@ -615,7 +599,7 @@
 
       <figure class="doc-card">
         <a class="doc-card__media" href="assets/credentials/certificate-msu-career-2014.jpg" target="_blank" rel="noopener">
-          <img src="assets/credentials/certificate-msu-career-2014.jpg" alt="Сертификат МГУ по инновационным технологиям организации центра профориентации" loading="lazy" decoding="async">
+          <img src="assets/credentials/certificate-msu-career-2014.jpg" alt="Сертификат МГУ по инновационным технологиям организации центра профориентации" width="643" height="900" loading="lazy" decoding="async">
         </a>
         <figcaption>
           <span class="doc-card__kind">Сертификат · 2014</span>
@@ -626,7 +610,7 @@
 
       <figure class="doc-card">
         <a class="doc-card__media" href="assets/credentials/certificate-foks-trainer-2016.jpg" target="_blank" rel="noopener">
-          <img src="assets/credentials/certificate-foks-trainer-2016.jpg" alt="Сертификат Регионального тренингового центра ФОКС по программе Тренинг тренеров" loading="lazy" decoding="async">
+          <img src="assets/credentials/certificate-foks-trainer-2016.jpg" alt="Сертификат Регионального тренингового центра ФОКС по программе Тренинг тренеров" width="638" height="900" loading="lazy" decoding="async">
         </a>
         <figcaption>
           <span class="doc-card__kind">Сертификат · 2016</span>
@@ -637,7 +621,7 @@
 
       <figure class="doc-card doc-card--book">
         <a class="doc-card__media" href="assets/credentials/certificate-cbt-practicum-2022.jpg" target="_blank" rel="noopener">
-          <img src="assets/credentials/certificate-cbt-practicum-2022.jpg" alt="Удостоверение о повышении квалификации по программе Практикум в КПТ-подходе" loading="lazy" decoding="async">
+          <img src="assets/credentials/certificate-cbt-practicum-2022.jpg" alt="Удостоверение о повышении квалификации по программе Практикум в КПТ-подходе" width="480" height="432" loading="lazy" decoding="async">
         </a>
         <figcaption>
           <span class="doc-card__kind">Повышение квалификации · 2022</span>
@@ -671,7 +655,7 @@
         <div class="planner__cover">
           <picture>
             <source srcset="assets/planner-anxiety.webp" type="image/webp">
-            <img src="assets/planner-anxiety.jpg" alt="Психотерапевтический ежедневник по работе с тревогой" loading="lazy">
+            <img src="assets/planner-anxiety.jpg" alt="Психотерапевтический ежедневник по работе с тревогой" width="1600" height="1131" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="planner__body">
@@ -694,7 +678,7 @@
         <div class="planner__cover">
           <picture>
             <source srcset="assets/planner-self-esteem.webp" type="image/webp">
-            <img src="assets/planner-self-esteem.jpg" alt="Ежедневник по работе с самооценкой" loading="lazy">
+            <img src="assets/planner-self-esteem.jpg" alt="Ежедневник по работе с самооценкой" width="1600" height="1131" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="planner__body">
@@ -717,7 +701,7 @@
         <div class="planner__cover">
           <picture>
             <source srcset="assets/planner-relationships.webp" type="image/webp">
-            <img src="assets/planner-relationships.jpg" alt="Ежедневник по проработке отношений с мужчинами" loading="lazy">
+            <img src="assets/planner-relationships.jpg" alt="Ежедневник по проработке отношений с мужчинами" width="1600" height="1131" loading="lazy" decoding="async">
           </picture>
         </div>
         <div class="planner__body">
@@ -761,14 +745,14 @@
       <div class="guide__rule">
         <div class="guide__rule-num">50/50</div>
         <div>
-          <h4>Правило 50/50</h4>
+          <h3>Правило 50/50</h3>
           <p>Вы отвечаете только за&nbsp;свою половину отношений. Не&nbsp;можете изменить партнёра, но&nbsp;изменив своё поведение — измените динамику пары.</p>
         </div>
       </div>
       <div class="guide__rule">
         <div class="guide__rule-num">▶</div>
         <div>
-          <h4>Правило контейнера</h4>
+          <h3>Правило контейнера</h3>
           <p>Все упражнения делайте, когда оба спокойны. Не&nbsp;пытайтесь «мириться» в&nbsp;момент ссоры, когда адреналин зашкаливает. Сначала остыньте.</p>
         </div>
       </div>
@@ -1096,22 +1080,22 @@
       <div class="process__line"></div>
       <div class="step reveal">
         <div class="step__num">I</div>
-        <h4>Заявка</h4>
+        <h3>Заявка</h3>
         <p>Пишете в&nbsp;WhatsApp, Telegram или ВК. Я&nbsp;отвечаю в&nbsp;течение рабочего дня (11:00–22:00).</p>
       </div>
       <div class="step reveal">
         <div class="step__num">II</div>
-        <h4>Знакомство</h4>
+        <h3>Знакомство</h3>
         <p>Короткий созвон или переписка: ваш запрос, мои уточнения, выбираем формат и&nbsp;время.</p>
       </div>
       <div class="step reveal">
         <div class="step__num">III</div>
-        <h4>Первая сессия</h4>
+        <h3>Первая сессия</h3>
         <p>50 минут — очно или онлайн. Формулируем цели, разбираем ожидания, намечаем план работы.</p>
       </div>
       <div class="step reveal">
         <div class="step__num">IV</div>
-        <h4>Регулярные встречи</h4>
+        <h3>Регулярные встречи</h3>
         <p>Желательно 1&nbsp;раз в&nbsp;неделю. Длительность курса подбираем по&nbsp;запросу. Решение продолжать&nbsp;— всегда за&nbsp;вами.</p>
       </div>
     </div>
@@ -1206,70 +1190,70 @@
       <div class="proof__grid" aria-label="Скриншоты анонимных отзывов клиентов">
         <figure class="proof-card">
           <a href="assets/reviews/client-review-01.jpg" target="_blank" rel="noopener">
-            <img src="assets/reviews/client-review-01.jpg" alt="Скриншот анонимного отзыва клиента о внимательности и векторе работы" loading="lazy" decoding="async">
+            <img src="assets/reviews/client-review-01.jpg" alt="Скриншот анонимного отзыва клиента о внимательности и векторе работы" width="744" height="684" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Внимательность и&nbsp;вектор работы</span><small>анонимно</small></figcaption>
         </figure>
 
         <figure class="proof-card">
           <a href="assets/reviews/client-review-02.jpg" target="_blank" rel="noopener">
-            <img src="assets/reviews/client-review-02.jpg" alt="Скриншот анонимного отзыва клиента об уверенности после консультации" loading="lazy" decoding="async">
+            <img src="assets/reviews/client-review-02.jpg" alt="Скриншот анонимного отзыва клиента об уверенности после консультации" width="589" height="710" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Уверенность после консультации</span><small>анонимно</small></figcaption>
         </figure>
 
         <figure class="proof-card">
           <a href="assets/reviews/client-review-03.jpg" target="_blank" rel="noopener">
-            <img src="assets/reviews/client-review-03.jpg" alt="Скриншот анонимного отзыва клиента о спокойствии после сеанса" loading="lazy" decoding="async">
+            <img src="assets/reviews/client-review-03.jpg" alt="Скриншот анонимного отзыва клиента о спокойствии после сеанса" width="662" height="804" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Спокойно и&nbsp;уютно на&nbsp;сессии</span><small>анонимно</small></figcaption>
         </figure>
 
         <figure class="proof-card">
           <a href="assets/reviews/client-review-04.jpg" target="_blank" rel="noopener">
-            <img src="assets/reviews/client-review-04.jpg" alt="Скриншот анонимного отзыва клиента о доверительной атмосфере" loading="lazy" decoding="async">
+            <img src="assets/reviews/client-review-04.jpg" alt="Скриншот анонимного отзыва клиента о доверительной атмосфере" width="900" height="1484" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Доверительная атмосфера</span><small>анонимно</small></figcaption>
         </figure>
 
         <figure class="proof-card">
           <a href="assets/reviews/client-review-05.jpg" target="_blank" rel="noopener">
-            <img src="assets/reviews/client-review-05.jpg" alt="Скриншот анонимного отзыва клиента о выстраивании отношений по-новому" loading="lazy" decoding="async">
+            <img src="assets/reviews/client-review-05.jpg" alt="Скриншот анонимного отзыва клиента о выстраивании отношений по-новому" width="826" height="768" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Отношения по-новому</span><small>анонимно</small></figcaption>
         </figure>
 
         <figure class="proof-card">
           <a href="assets/reviews/client-review-06.jpg" target="_blank" rel="noopener">
-            <img src="assets/reviews/client-review-06.jpg" alt="Скриншот анонимного отзыва клиента о поддержке в непростое время" loading="lazy" decoding="async">
+            <img src="assets/reviews/client-review-06.jpg" alt="Скриншот анонимного отзыва клиента о поддержке в непростое время" width="900" height="1239" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Поддержка в&nbsp;непростое время</span><small>анонимно</small></figcaption>
         </figure>
 
         <figure class="proof-card">
           <a href="assets/reviews/client-review-07.jpg" target="_blank" rel="noopener">
-            <img src="assets/reviews/client-review-07.jpg" alt="Скриншот анонимного отзыва клиента о систематизации мыслей" loading="lazy" decoding="async">
+            <img src="assets/reviews/client-review-07.jpg" alt="Скриншот анонимного отзыва клиента о систематизации мыслей" width="900" height="1474" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Систематизировать мысли</span><small>анонимно</small></figcaption>
         </figure>
 
         <figure class="proof-card">
           <a href="assets/reviews/client-review-08.jpg" target="_blank" rel="noopener">
-            <img src="assets/reviews/client-review-08.jpg" alt="Скриншот анонимного отзыва клиента о пути решения вопроса" loading="lazy" decoding="async">
+            <img src="assets/reviews/client-review-08.jpg" alt="Скриншот анонимного отзыва клиента о пути решения вопроса" width="715" height="1105" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Путь решения вопроса</span><small>анонимно</small></figcaption>
         </figure>
 
         <figure class="proof-card">
           <a href="assets/reviews/client-review-09.jpg" target="_blank" rel="noopener">
-            <img src="assets/reviews/client-review-09.jpg" alt="Скриншот анонимного отзыва клиента о профессионализме и рекомендациях" loading="lazy" decoding="async">
+            <img src="assets/reviews/client-review-09.jpg" alt="Скриншот анонимного отзыва клиента о профессионализме и рекомендациях" width="900" height="1951" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Профессионализм и&nbsp;рекомендации</span><small>анонимно</small></figcaption>
         </figure>
 
         <figure class="proof-card">
           <a href="assets/reviews/client-review-10.jpg" target="_blank" rel="noopener">
-            <img src="assets/reviews/client-review-10.jpg" alt="Скриншот анонимного отзыва клиента о выходе из зоны комфорта" loading="lazy" decoding="async">
+            <img src="assets/reviews/client-review-10.jpg" alt="Скриншот анонимного отзыва клиента о выходе из зоны комфорта" width="884" height="869" loading="lazy" decoding="async">
           </a>
           <figcaption><span>Выход из&nbsp;зоны комфорта</span><small>анонимно</small></figcaption>
         </figure>
@@ -1479,13 +1463,18 @@
           <textarea id="fComment" name="comment" placeholder="Несколько слов помогут мне подготовиться"></textarea>
         </div>
 
+        <label class="form__consent" id="formConsentWrap">
+          <input type="checkbox" id="fConsent" name="consent" required>
+          <span>Я&nbsp;согласен(на) на&nbsp;обработку персональных данных и&nbsp;ознакомлен(а) с&nbsp;<a href="privacy.html" target="_blank" rel="noopener">политикой конфиденциальности</a>.</span>
+        </label>
+
         <button type="submit" class="btn" data-magnetic>
           Отправить заявку
           <span class="btn__arrow">→</span>
         </button>
 
         <p class="form__agree">
-          Отправляя форму, вы&nbsp;соглашаетесь с&nbsp;<a href="privacy.html" target="_blank" rel="noopener">политикой&nbsp;конфиденциальности</a>. Ваши данные не&nbsp;передаются третьим лицам.
+          Ваши данные не&nbsp;передаются третьим лицам. Я&nbsp;использую их только, чтобы связаться с&nbsp;вами по&nbsp;заявке.
         </p>
       </div>
 
@@ -1504,6 +1493,8 @@
   </div>
 </section>
 
+</main>
+
 <!-- ============== FOOTER ============== -->
 <footer class="footer">
   <div class="container">
@@ -1520,7 +1511,7 @@
       </div>
 
       <div>
-        <h5>Навигация</h5>
+        <h2 class="footer__heading">Навигация</h2>
         <ul>
           <li><a href="#about">Обо мне</a></li>
           <li><a href="#issues">С чем работаю</a></li>
@@ -1533,7 +1524,7 @@
       </div>
 
       <div>
-        <h5>Контакты</h5>
+        <h2 class="footer__heading">Контакты</h2>
         <ul>
           <li><a href="tel:+79236108440">+7 923 610-84-40</a></li>
           <li><a href="mailto:e.morodenko@mail.ru">e.morodenko@mail.ru</a></li>
@@ -1543,7 +1534,7 @@
       </div>
 
       <div>
-        <h5>Социальные сети</h5>
+        <h2 class="footer__heading">Социальные сети</h2>
         <ul>
           <li><a href="https://t.me/morodenko" target="_blank" rel="noopener">Telegram-канал</a></li>
           <li><a href="https://vk.com/psychologist_prk" target="_blank" rel="noopener">ВКонтакте</a></li>
@@ -1563,7 +1554,6 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-<script src="script.js"></script>
+<script src="script.min.js"></script>
 </body>
 </html>
