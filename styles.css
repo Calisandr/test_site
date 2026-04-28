@@ -106,7 +106,11 @@
 }
 
 *,*::before,*::after{ box-sizing: border-box; }
-html{ scroll-behavior: auto; overflow-x: hidden; }
+html{
+  scroll-behavior: auto;
+  overflow-x: hidden;
+  background: var(--bg);
+}
 
 /* ============== SCROLLBAR (single accent color, both themes) ============== */
 /* Firefox */

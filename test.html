@@ -19,6 +19,10 @@
     try {
       var t = localStorage.getItem('theme');
       if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      var themeColor = t === 'dark' ? '#1a1410' : '#f4ede3';
+      document.querySelectorAll('meta[name="theme-color"]').forEach(function(meta){
+        meta.setAttribute('content', themeColor);
+      });
       document.documentElement.setAttribute('data-theme', t);
     } catch(e){}
   })();
@@ -211,6 +215,13 @@
 
 <script>
   (function(){
+    function updateThemeChrome(theme){
+      var themeColor = theme === 'dark' ? '#1a1410' : '#f4ede3';
+      document.querySelectorAll('meta[name="theme-color"]').forEach(function(meta){
+        meta.setAttribute('content', themeColor);
+      });
+    }
+
     var toggle = document.getElementById('testThemeToggle');
     if (toggle){
       toggle.addEventListener('click', function(){
@@ -218,6 +229,7 @@
         var current = document.documentElement.getAttribute('data-theme') || 'light';
         var next = current === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
+        updateThemeChrome(next);
         try { localStorage.setItem('theme', next); } catch(e){}
         setTimeout(function(){ toggle.blur(); }, 0);
         setTimeout(function(){ document.documentElement.classList.remove('theme-anim'); }, 500);

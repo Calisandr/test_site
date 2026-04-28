@@ -50,11 +50,19 @@
   function getStoredTheme(){
     try { return localStorage.getItem('theme'); } catch(_) { return null; }
   }
+  function updateThemeChrome(t){
+    const themeColor = t === 'dark' ? '#1a1410' : '#f4ede3';
+    document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
+      meta.setAttribute('content', themeColor);
+    });
+  }
   function setTheme(t){
     document.documentElement.setAttribute('data-theme', t);
+    updateThemeChrome(t);
     try { localStorage.setItem('theme', t); } catch(_){}
     track('theme_change', { theme: t });
   }
+  updateThemeChrome(document.documentElement.getAttribute('data-theme') || 'light');
   themeToggles.forEach(btn => {
     btn.addEventListener('click', () => {
       // Add transition class temporarily so the swap animates smoothly
@@ -68,7 +76,9 @@
   // Sync with OS theme changes if user hasn't manually picked
   matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', e => {
     if (!getStoredTheme()){
-      document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+      const nextTheme = e.matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', nextTheme);
+      updateThemeChrome(nextTheme);
     }
   });
 
