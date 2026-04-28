@@ -52,9 +52,16 @@
   }
   function updateThemeChrome(t){
     const themeColor = t === 'dark' ? '#1a1410' : '#f4ede3';
+    const scheme = t === 'dark' ? 'dark light' : 'light dark';
     document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
       meta.setAttribute('content', themeColor);
     });
+    document.querySelectorAll('meta[name="color-scheme"]').forEach(meta => {
+      meta.setAttribute('content', scheme);
+    });
+    document.documentElement.style.colorScheme = t;
+    document.documentElement.style.backgroundColor = themeColor;
+    if (document.body) document.body.style.backgroundColor = themeColor;
   }
   function setTheme(t){
     document.documentElement.setAttribute('data-theme', t);

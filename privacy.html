@@ -2,9 +2,9 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f4ede3" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1a1410" media="(prefers-color-scheme: dark)">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f4ede3">
+<meta name="color-scheme" content="light dark">
 <title>Политика конфиденциальности · Мороденко Евгения</title>
 <meta name="description" content="Политика конфиденциальности и обработки персональных данных на сайте психолога Евгении Мороденко.">
 <link rel="canonical" href="https://morodenko-psy.vercel.app/privacy.html">
@@ -30,6 +30,11 @@
       document.querySelectorAll('meta[name="theme-color"]').forEach(function(meta){
         meta.setAttribute('content', themeColor);
       });
+      document.querySelectorAll('meta[name="color-scheme"]').forEach(function(meta){
+        meta.setAttribute('content', t === 'dark' ? 'dark light' : 'light dark');
+      });
+      document.documentElement.style.colorScheme = t;
+      document.documentElement.style.backgroundColor = themeColor;
       document.documentElement.setAttribute('data-theme', t);
     } catch(e){}
   })();

@@ -110,6 +110,11 @@ html{
   scroll-behavior: auto;
   overflow-x: hidden;
   background: var(--bg);
+  background-color: var(--bg);
+}
+html,
+body{
+  min-height: 100%;
 }
 
 /* ============== SCROLLBAR (single accent color, both themes) ============== */
@@ -141,10 +146,12 @@ body{
   margin:0;
   font-family: var(--f-sans);
   background: var(--bg);
+  background-color: var(--bg);
   color: var(--ink);
   font-size: 17px;
   line-height: 1.65;
   font-weight: 400;
+  min-height: 100dvh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
@@ -2471,8 +2478,9 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 /* ============== TEST PAGE ============== */
 .test-body{
   min-height: 100vh;
-  background:
-    linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+  min-height: 100dvh;
+  background-color: var(--bg);
+  background-image: linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
 }
 .test-nav{
   width: min(1180px, calc(100% - 48px));
