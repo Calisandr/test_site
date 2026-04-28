@@ -280,34 +280,6 @@
     counters.forEach(el => ioCounter.observe(el));
   }
 
-  /* ---- Auto-size cert seals: tag each by character count ---- */
-  document.querySelectorAll('.cert__seal').forEach(el => {
-    const len = el.textContent.trim().length;
-    el.setAttribute('data-len', len);
-  });
-
-  /* ---- Credentials tabs ---- */
-  const tabs = document.querySelectorAll('.creds__tab');
-  const panels = document.querySelectorAll('.creds__panel');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const target = tab.dataset.tab;
-      tabs.forEach(t => t.classList.remove('active'));
-      panels.forEach(p => p.classList.remove('active'));
-      tab.classList.add('active');
-      const panel = document.querySelector(`.creds__panel[data-panel="${target}"]`);
-      if (panel) panel.classList.add('active');
-      if (typeof gsap !== 'undefined' && !reduceMotion){
-        gsap.from(`.creds__panel[data-panel="${target}"] .cert`, {
-          opacity: 0, y: 30,
-          stagger: 0.06,
-          duration: 0.6,
-          ease: 'power3.out'
-        });
-      }
-    });
-  });
-
   /* ---- Testimonials slider ---- */
   const testTrack = document.getElementById('testTrack');
   const cards = testTrack && testTrack.children;
@@ -369,6 +341,31 @@
       proofCards.forEach(card => proofIO.observe(card));
     } else {
       proofCards.forEach(card => card.classList.add('is-visible'));
+    }
+  }
+
+  /* ---- Credential scans: soft document-cover reveal ---- */
+  const docCards = Array.from(document.querySelectorAll('.doc-card'));
+  if (docCards.length){
+    if (reduceMotion){
+      docCards.forEach(card => card.classList.add('is-visible'));
+    } else if ('IntersectionObserver' in window){
+      docCards.forEach(card => card.classList.add('is-prepping'));
+      const docIO = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const card = entry.target;
+          const i = docCards.indexOf(card);
+          setTimeout(() => {
+            card.classList.add('is-visible');
+            card.classList.remove('is-prepping');
+          }, Math.min(i % 6, 5) * 85);
+          docIO.unobserve(card);
+        });
+      }, { threshold: 0.16, rootMargin: '0px 0px -70px 0px' });
+      docCards.forEach(card => docIO.observe(card));
+    } else {
+      docCards.forEach(card => card.classList.add('is-visible'));
     }
   }
 
@@ -681,34 +678,6 @@
       });
       card.addEventListener('mouseleave', () => {
         card.style.transform = '';
-      });
-    });
-  }
-
-  /* ---- 3D mouse-tracked tilt for certificate cards ---- */
-  if (!reduceMotion && window.matchMedia('(hover: hover)').matches){
-    document.querySelectorAll('.cert').forEach(card => {
-      let raf;
-      card.addEventListener('mousemove', e => {
-        if (raf) cancelAnimationFrame(raf);
-        raf = requestAnimationFrame(() => {
-          const rect = card.getBoundingClientRect();
-          const px = (e.clientX - rect.left) / rect.width - 0.5;  // -0.5 .. 0.5
-          const py = (e.clientY - rect.top) / rect.height - 0.5;
-          // tilt amount: 8deg max
-          card.style.setProperty('--tilt-x', `${(-py * 9).toFixed(2)}deg`);
-          card.style.setProperty('--tilt-y', `${(px * 9).toFixed(2)}deg`);
-          // parallax shift for inner elements
-          card.style.setProperty('--shift-x', `${(px * 8).toFixed(2)}px`);
-          card.style.setProperty('--shift-y', `${(py * 8).toFixed(2)}px`);
-        });
-      });
-      card.addEventListener('mouseleave', () => {
-        if (raf) cancelAnimationFrame(raf);
-        card.style.setProperty('--tilt-x', '0deg');
-        card.style.setProperty('--tilt-y', '0deg');
-        card.style.setProperty('--shift-x', '0px');
-        card.style.setProperty('--shift-y', '0px');
       });
     });
   }
