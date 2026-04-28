@@ -999,6 +999,7 @@
     'about':       'view_about',
     'issues':      'view_issues',
     'credentials': 'view_credentials',
+    'publications':'view_publications',
     'planners':    'view_planners',
     'guide':       'view_guide',
     'services':    'view_services',
