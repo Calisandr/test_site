@@ -656,15 +656,30 @@
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const href = a.getAttribute('href');
-      if (href === '#' || href.length < 2) return;
-      const target = document.querySelector(href);
+      if (!href) return;
+
+      let target = null;
+      if (href === '#'){
+        target = document.body;
+      } else if (href.length >= 2){
+        try {
+          target = document.querySelector(href);
+        } catch (_) {
+          target = null;
+        }
+      }
+
       if (target){
         e.preventDefault();
-        const offset = 70;
+        const isTopLink = href === '#' || href === '#top' || target === document.body || target === document.documentElement;
+        const offset = isTopLink ? 0 : 70;
+        const y = isTopLink
+          ? 0
+          : Math.max(0, target.getBoundingClientRect().top + window.pageYOffset - offset);
+
         if (lenis){
-          lenis.scrollTo(target, { offset: -offset, duration: 1.4 });
+          lenis.scrollTo(y, { duration: isTopLink ? 1 : 1.4 });
         } else {
-          const y = target.getBoundingClientRect().top + window.pageYOffset - offset;
           window.scrollTo({ top: y, behavior: 'smooth' });
         }
       }
