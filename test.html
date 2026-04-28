@@ -185,7 +185,9 @@
     </form>
 
     <section class="psy-result" id="psyResult" hidden aria-live="polite">
-      <div class="psy-result__score"><span id="psyScore">0</span>/10</div>
+      <div class="psy-result__score" id="psyScoreWrap" aria-label="0 из 10">
+        <span class="psy-result__score-line"><span id="psyScore">0</span>/10</span>
+      </div>
       <div>
         <h3 id="psyResultTitle"></h3>
         <p id="psyResultText"></p>
@@ -229,6 +231,7 @@
     var answeredEl = document.getElementById('psyAnswered');
     var progressEl = document.getElementById('psyProgress');
     var result = document.getElementById('psyResult');
+    var scoreWrap = document.getElementById('psyScoreWrap');
     var scoreEl = document.getElementById('psyScore');
     var titleEl = document.getElementById('psyResultTitle');
     var textEl = document.getElementById('psyResultText');
@@ -307,6 +310,7 @@
 
       var yesCount = form.querySelectorAll('input[value="yes"]:checked').length;
       scoreEl.textContent = yesCount;
+      scoreWrap.setAttribute('aria-label', yesCount + ' из 10');
       result.hidden = false;
       result.classList.toggle('psy-result--high', yesCount >= 4);
       result.classList.toggle('psy-result--low', yesCount < 4);
