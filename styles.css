@@ -109,16 +109,12 @@
 html{
   scroll-behavior: auto;
   overflow-x: hidden;
-  overscroll-behavior-x: none;
-  overscroll-behavior-y: none;
   background: var(--bg);
   background-color: var(--bg);
 }
 html,
 body{
   min-height: 100%;
-  overscroll-behavior-x: none;
-  overscroll-behavior-y: none;
 }
 
 /* ============== SCROLLBAR (single accent color, both themes) ============== */
@@ -159,20 +155,6 @@ body{
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
-}
-
-@supports (padding-top: env(safe-area-inset-top)){
-  body::after{
-    content:"";
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: -160px;
-    height: calc(160px + env(safe-area-inset-top));
-    background: var(--bg);
-    pointer-events: none;
-    z-index: 0;
-  }
 }
 
 /* 3D animated background — sits behind everything, very subtle */

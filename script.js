@@ -123,26 +123,6 @@
     }
   });
 
-  function installTopOverscrollGuard(){
-    if (!('ontouchstart' in window) && navigator.maxTouchPoints < 1) return;
-    let startY = 0;
-    let watchTopPull = false;
-    const scrollTop = () => window.scrollY || document.documentElement.scrollTop || document.body?.scrollTop || 0;
-
-    document.addEventListener('touchstart', event => {
-      if (event.touches.length !== 1) return;
-      startY = event.touches[0].clientY;
-      watchTopPull = scrollTop() <= 0;
-    }, { passive: true });
-
-    document.addEventListener('touchmove', event => {
-      if (!watchTopPull || event.touches.length !== 1) return;
-      const pullingDown = event.touches[0].clientY > startY;
-      if (pullingDown && scrollTop() <= 0) event.preventDefault();
-    }, { passive: false });
-  }
-  installTopOverscrollGuard();
-
   /* ---- Loader ---- */
   const loader = document.getElementById('loader');
   window.addEventListener('load', () => {
