@@ -53,12 +53,46 @@
   function updateThemeChrome(t){
     const themeColor = t === 'dark' ? '#1a1410' : '#f4ede3';
     const scheme = t === 'dark' ? 'dark light' : 'light dark';
-    document.querySelectorAll('meta[name="theme-color"]').forEach(meta => {
-      meta.setAttribute('content', themeColor);
+
+    const syncMeta = () => {
+      const themeMetas = Array.from(document.querySelectorAll('meta[name="theme-color"]'));
+      themeMetas.slice(1).forEach(meta => meta.remove());
+      let themeMeta = themeMetas[0] || null;
+      if (!themeMeta){
+        themeMeta = document.createElement('meta');
+        themeMeta.setAttribute('name', 'theme-color');
+        document.head.prepend(themeMeta);
+      }
+      themeMeta.setAttribute('content', themeColor);
+
+      let schemeMeta = document.querySelector('meta[name="color-scheme"]');
+      if (!schemeMeta){
+        schemeMeta = document.createElement('meta');
+        schemeMeta.setAttribute('name', 'color-scheme');
+        document.head.insertBefore(schemeMeta, themeMeta.nextSibling);
+      }
+      schemeMeta.setAttribute('content', scheme);
+
+      let appleMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+      if (!appleMeta){
+        appleMeta = document.createElement('meta');
+        appleMeta.setAttribute('name', 'apple-mobile-web-app-status-bar-style');
+        document.head.insertBefore(appleMeta, schemeMeta.nextSibling);
+      }
+      appleMeta.setAttribute('content', t === 'dark' ? 'black-translucent' : 'default');
+    };
+
+    syncMeta();
+    requestAnimationFrame(() => {
+      const current = document.querySelector('meta[name="theme-color"]');
+      if (current){
+        const replacement = current.cloneNode(false);
+        replacement.setAttribute('content', themeColor);
+        current.replaceWith(replacement);
+      }
+      syncMeta();
     });
-    document.querySelectorAll('meta[name="color-scheme"]').forEach(meta => {
-      meta.setAttribute('content', scheme);
-    });
+    setTimeout(syncMeta, 120);
     document.documentElement.style.colorScheme = t;
     document.documentElement.style.backgroundColor = themeColor;
     if (document.body) document.body.style.backgroundColor = themeColor;
@@ -88,6 +122,26 @@
       updateThemeChrome(nextTheme);
     }
   });
+
+  function installTopOverscrollGuard(){
+    if (!('ontouchstart' in window) && navigator.maxTouchPoints < 1) return;
+    let startY = 0;
+    let watchTopPull = false;
+    const scrollTop = () => window.scrollY || document.documentElement.scrollTop || document.body?.scrollTop || 0;
+
+    document.addEventListener('touchstart', event => {
+      if (event.touches.length !== 1) return;
+      startY = event.touches[0].clientY;
+      watchTopPull = scrollTop() <= 0;
+    }, { passive: true });
+
+    document.addEventListener('touchmove', event => {
+      if (!watchTopPull || event.touches.length !== 1) return;
+      const pullingDown = event.touches[0].clientY > startY;
+      if (pullingDown && scrollTop() <= 0) event.preventDefault();
+    }, { passive: false });
+  }
+  installTopOverscrollGuard();
 
   /* ---- Loader ---- */
   const loader = document.getElementById('loader');
