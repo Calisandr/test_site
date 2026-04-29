@@ -11,24 +11,51 @@ import { Resend } from 'resend';
 const RECIPIENT = process.env.LEAD_RECIPIENT || 'e.morodenko@mail.ru';
 const FROM      = process.env.LEAD_FROM      || 'Сайт Мороденко <onboarding@resend.dev>';
 
-// In-memory rate limit (per-instance; sufficient for low-traffic regional site).
-// Resets every time the function cold-starts.
+// In-memory abuse guards (per-instance; Vercel still handles the outer DDoS edge).
+// These reset on cold starts, so they are a first line of defense, not a database.
 const rateLimit = new Map();
-const RL_WINDOW_MS = 60_000;   // 1 minute window
-const RL_MAX_HITS  = 5;        // max 5 submissions per IP per minute
+const RL_WINDOW_MS = 60_000;             // 1 minute per IP
+const RL_MAX_HITS  = 4;                  // max 4 submissions per IP per minute
+const PHONE_WINDOW_MS = 60 * 60 * 1000;  // 1 hour per phone number
+const PHONE_MAX_HITS = 3;                // max 3 submissions per phone per hour
 const MIN_FORM_TIME_MS = 1_500;
 const MAX_FORM_TIME_MS = 1000 * 60 * 60 * 3;
+const MAX_BODY_BYTES = 8 * 1024;
 
-function withinRateLimit(ip){
+const ALLOWED_FORMATS = new Set([
+  'Очно · Прокопьевск',
+  'Онлайн',
+  'Пока не решил(а)'
+]);
+
+const ALLOWED_SERVICES = new Set([
+  'Первичная консультация',
+  'Сложности в отношениях / семейная',
+  'Тревога и панические атаки',
+  'Эмоциональное выгорание',
+  'Самооценка, уверенность в себе',
+  'Кризис, перемены, потеря',
+  'Заказ ежедневника',
+  'Другое / пока не знаю'
+]);
+
+function setSecurityHeaders(res){
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Vary', 'Origin');
+}
+
+function withinRateLimit(key, windowMs = RL_WINDOW_MS, maxHits = RL_MAX_HITS){
   const now = Date.now();
-  const hits = (rateLimit.get(ip) || []).filter(t => now - t < RL_WINDOW_MS);
-  if (hits.length >= RL_MAX_HITS) return false;
+  const hits = (rateLimit.get(key) || []).filter(t => now - t < windowMs);
+  if (hits.length >= maxHits) return false;
   hits.push(now);
-  rateLimit.set(ip, hits);
+  rateLimit.set(key, hits);
   // Janitor: drop old IPs occasionally to prevent unbounded growth
   if (rateLimit.size > 1000){
     for (const [k, v] of rateLimit){
-      if (!v.length || now - v[v.length - 1] > RL_WINDOW_MS) rateLimit.delete(k);
+      if (!v.length || now - v[v.length - 1] > Math.max(RL_WINDOW_MS, PHONE_WINDOW_MS)) rateLimit.delete(k);
     }
   }
   return true;
@@ -64,21 +91,33 @@ function normalizeBoolean(value){
   return value === true || value === 'true' || value === 'on' || value === '1' || value === 1;
 }
 
+function isAllowedHost(host, requestHost){
+  return host === requestHost ||
+    host === 'morodenko-psy.vercel.app' ||
+    host === 'localhost:3000' ||
+    host === 'localhost:4173' ||
+    host === 'localhost:4175' ||
+    host === 'localhost:4176' ||
+    host === '127.0.0.1:3000' ||
+    host === '127.0.0.1:4173' ||
+    host === '127.0.0.1:4175' ||
+    host === '127.0.0.1:4176' ||
+    /^morodenko-psy-.+\.vercel\.app$/.test(host);
+}
+
 function isTrustedOrigin(req){
-  const origin = req.headers.origin;
-  if (!origin) return true;
-
+  const requestHost = req.headers.host;
   try {
-    const originHost = new URL(origin).host;
-    const requestHost = req.headers.host;
+    const origin = req.headers.origin;
+    if (origin) return isAllowedHost(new URL(origin).host, requestHost);
 
-    if (originHost === requestHost) return true;
-    if (originHost === 'morodenko-psy.vercel.app') return true;
-    if (originHost === 'localhost:3000' || originHost === 'localhost:4173') return true;
-    if (originHost === '127.0.0.1:3000' || originHost === '127.0.0.1:4173') return true;
-    if (/^morodenko-psy-.+\.vercel\.app$/.test(originHost)) return true;
+    const referer = req.headers.referer || req.headers.referrer;
+    if (referer) return isAllowedHost(new URL(referer).host, requestHost);
 
-    return false;
+    const fetchSite = req.headers['sec-fetch-site'];
+    if (fetchSite && !['same-origin', 'same-site', 'none'].includes(String(fetchSite))) return false;
+
+    return process.env.NODE_ENV !== 'production';
   } catch (_) {
     return false;
   }
@@ -90,11 +129,46 @@ function hasHumanTiming(startedAt){
   return elapsed >= MIN_FORM_TIME_MS && elapsed <= MAX_FORM_TIME_MS;
 }
 
+function hasAllowedContentType(req){
+  const type = String(req.headers['content-type'] || '').toLowerCase();
+  return type.startsWith('application/json');
+}
+
+function hasAllowedSize(req){
+  const raw = req.headers['content-length'];
+  if (!raw) return true;
+  const length = Number(raw);
+  return Number.isFinite(length) && length > 0 && length <= MAX_BODY_BYTES;
+}
+
+function normalizePhoneDigits(value){
+  let digits = String(value || '').replace(/\D/g, '');
+  if (digits.startsWith('8')) digits = `7${digits.slice(1)}`;
+  if (digits.length === 10) digits = `7${digits}`;
+  return digits;
+}
+
+function hasSpammyContent(...values){
+  const joined = values.filter(Boolean).join(' ');
+  const linkLike = joined.match(/https?:\/\/|www\.|\.ru\b|\.com\b|\.net\b|\.org\b|t\.me|wa\.me/gi);
+  return Boolean(linkLike && linkLike.length > 1);
+}
+
 export default async function handler(req, res){
+  setSecurityHeaders(res);
+
   // Method gate
   if (req.method !== 'POST'){
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ success: false, error: 'Method not allowed' });
+  }
+
+  if (!hasAllowedSize(req)){
+    return res.status(413).json({ success: false, error: 'Слишком большой запрос' });
+  }
+
+  if (!hasAllowedContentType(req)){
+    return res.status(415).json({ success: false, error: 'Unsupported media type' });
   }
 
   if (!isTrustedOrigin(req)){
@@ -111,7 +185,7 @@ export default async function handler(req, res){
 
   // Rate limit
   const ip = getClientIp(req);
-  if (!withinRateLimit(ip)){
+  if (!withinRateLimit(`ip:${ip}`)){
     return res.status(429).json({ success: false, error: 'Too many requests' });
   }
 
@@ -123,17 +197,18 @@ export default async function handler(req, res){
   const comment = sanitize(body.comment, 2000);
   const consent = normalizeBoolean(body.consent);
   const startedAt = Number(body.form_started_at || body.started_at || body.startedAt || 0);
+  const phoneDigits = normalizePhoneDigits(phone);
 
-  if (!name){
+  if (!name || name.length < 2 || /https?:\/\/|www\.|@/.test(name)){
     return res.status(400).json({ success: false, error: 'Имя обязательно' });
   }
-  if (!phone || phone.replace(/\D/g, '').length < 11){
+  if (!phone || phoneDigits.length !== 11 || !phoneDigits.startsWith('7')){
     return res.status(400).json({ success: false, error: 'Некорректный телефон' });
   }
-  if (!format){
+  if (!format || !ALLOWED_FORMATS.has(format)){
     return res.status(400).json({ success: false, error: 'Выберите формат консультации' });
   }
-  if (!service){
+  if (!service || !ALLOWED_SERVICES.has(service)){
     return res.status(400).json({ success: false, error: 'Выберите запрос консультации' });
   }
   if (!consent){
@@ -141,6 +216,12 @@ export default async function handler(req, res){
   }
   if (!hasHumanTiming(startedAt)){
     return res.status(400).json({ success: false, error: 'Пожалуйста, отправьте форму ещё раз' });
+  }
+  if (hasSpammyContent(name, comment)){
+    return res.status(400).json({ success: false, error: 'Пожалуйста, отправьте форму без ссылок' });
+  }
+  if (!withinRateLimit(`phone:${phoneDigits}`, PHONE_WINDOW_MS, PHONE_MAX_HITS)){
+    return res.status(429).json({ success: false, error: 'Too many requests' });
   }
 
   // Resend API key check (fails loudly in logs, generic message to user)
@@ -181,7 +262,7 @@ export default async function handler(req, res){
 // ============== EMAIL TEMPLATES ==============
 
 function renderHtml({ name, phone, format, service, comment }){
-  const phoneDigits = phone.replace(/\D/g, '');
+  const phoneDigits = normalizePhoneDigits(phone);
   const date = new Date().toLocaleString('ru-RU', {
     timeZone: 'Asia/Novokuznetsk',
     day: 'numeric', month: 'long', year: 'numeric',

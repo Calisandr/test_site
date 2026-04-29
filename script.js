@@ -682,7 +682,25 @@
     }
 
     function showError(msg){
-      errorText.innerHTML = msg + ' Или напишите в&nbsp;<a href="https://api.whatsapp.com/send/?phone=79236108440" target="_blank" rel="noopener">WhatsApp</a> / <a href="https://t.me/morodenko" target="_blank" rel="noopener">Telegram</a>.';
+      const whatsapp = document.createElement('a');
+      whatsapp.href = 'https://api.whatsapp.com/send/?phone=79236108440';
+      whatsapp.target = '_blank';
+      whatsapp.rel = 'noopener noreferrer';
+      whatsapp.textContent = 'WhatsApp';
+
+      const telegram = document.createElement('a');
+      telegram.href = 'https://t.me/morodenko';
+      telegram.target = '_blank';
+      telegram.rel = 'noopener noreferrer';
+      telegram.textContent = 'Telegram';
+
+      errorText.replaceChildren(
+        document.createTextNode(`${String(msg || 'Попробуйте ещё раз.')} Или напишите в `),
+        whatsapp,
+        document.createTextNode(' / '),
+        telegram,
+        document.createTextNode('.')
+      );
       errorBox.classList.add('show');
       submitBtn.disabled = false;
       submitBtn.innerHTML = submitOriginalHTML;
@@ -755,6 +773,10 @@
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
+          cache: 'no-store',
+          credentials: 'same-origin',
+          redirect: 'error',
+          referrerPolicy: 'strict-origin-when-cross-origin',
           body: JSON.stringify(payload)
         });
 

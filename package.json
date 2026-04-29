@@ -15,7 +15,7 @@
     "check": "node --check script.js && node --check script.min.js && node --check api/send-lead.js"
   },
   "dependencies": {
-    "resend": "4.0.0"
+    "resend": "^4.8.0"
   },
   "devDependencies": {
     "lightningcss-cli": "1.32.0",
