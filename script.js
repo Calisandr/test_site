@@ -225,17 +225,19 @@
 
   /* ---- Reveal on scroll ---- */
   const revealEls = document.querySelectorAll('.reveal');
+  const revealLeadPx = window.innerWidth < 768 ? 90 : 130;
+  const revealRootMargin = `0px 0px ${revealLeadPx}px 0px`;
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !reduceMotion){
     revealEls.forEach((el, i) => {
       gsap.fromTo(el,
-        { opacity: 0, y: 50 },
+        { opacity: 0, y: 34 },
         {
           opacity: 1, y: 0,
-          duration: 1,
+          duration: 0.9,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: el,
-            start: 'top 85%',
+            start: window.innerWidth < 768 ? 'top 92%' : 'top 90%',
             toggleActions: 'play none none none'
           }
         }
@@ -250,7 +252,7 @@
           io.unobserve(e.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+    }, { threshold: 0.06, rootMargin: revealRootMargin });
     revealEls.forEach(el => io.observe(el));
   }
 
@@ -413,7 +415,7 @@
           }, Math.min(i % 6, 5) * 90);
           proofIO.unobserve(card);
         });
-      }, { threshold: 0.18, rootMargin: '0px 0px -70px 0px' });
+      }, { threshold: 0.08, rootMargin: revealRootMargin });
       proofCards.forEach(card => proofIO.observe(card));
     } else {
       proofCards.forEach(card => card.classList.add('is-visible'));
@@ -438,7 +440,7 @@
           }, Math.min(i % 6, 5) * 85);
           docIO.unobserve(card);
         });
-      }, { threshold: 0.16, rootMargin: '0px 0px -70px 0px' });
+      }, { threshold: 0.08, rootMargin: revealRootMargin });
       docCards.forEach(card => docIO.observe(card));
     } else {
       docCards.forEach(card => card.classList.add('is-visible'));

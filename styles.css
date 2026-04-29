@@ -3372,10 +3372,10 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 }
 
 /* ============== REVEAL ============== */
-.reveal{ opacity: 0; transform: translateY(40px); }
+.reveal{ opacity: 0; transform: translateY(30px); }
 .reveal.in{
   opacity: 1; transform: translateY(0);
-  transition: opacity 1s var(--ease-out), transform 1s var(--ease-out);
+  transition: opacity .9s var(--ease-out), transform .9s var(--ease-out);
 }
 
 /* ============== MOBILE NAV ============== */
