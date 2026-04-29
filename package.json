@@ -10,7 +10,8 @@
   "scripts": {
     "build:css": "lightningcss styles.css --minify --targets \">= 0.25%\" --output-file styles.min.css",
     "build:js": "terser script.js --compress --mangle --output script.min.js",
-    "build": "npm run build:css && npm run build:js",
+    "build:public": "node scripts/build-public.mjs",
+    "build": "npm run build:css && npm run build:js && npm run build:public",
     "check": "node --check script.js && node --check script.min.js && node --check api/send-lead.js"
   },
   "dependencies": {

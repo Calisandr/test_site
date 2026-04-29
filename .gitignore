@@ -27,6 +27,7 @@ npm-debug.log*
 # Build / cache
 dist/
 build/
+public/
 .cache/
 .tmp/
 
