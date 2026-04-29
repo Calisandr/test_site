@@ -3089,10 +3089,19 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   -webkit-user-select: none;
   transition: background-color .18s, color .18s;
 }
+.custom-select__option.is-disabled{
+  opacity: .5;
+  cursor: not-allowed;
+}
 .custom-select__option:hover,
 .custom-select__option.is-active{
   background: var(--terracotta);
   color: var(--on-accent);
+}
+.custom-select__option.is-disabled:hover,
+.custom-select__option.is-disabled.is-active{
+  background: transparent;
+  color: var(--ink);
 }
 .custom-select__option.is-selected:not(:hover):not(.is-active){
   background: rgba(184,89,58,.12);

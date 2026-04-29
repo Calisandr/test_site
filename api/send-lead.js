@@ -16,6 +16,8 @@ const FROM      = process.env.LEAD_FROM      || 'Сайт Мороденко <on
 const rateLimit = new Map();
 const RL_WINDOW_MS = 60_000;   // 1 minute window
 const RL_MAX_HITS  = 5;        // max 5 submissions per IP per minute
+const MIN_FORM_TIME_MS = 1_500;
+const MAX_FORM_TIME_MS = 1000 * 60 * 60 * 3;
 
 function withinRateLimit(ip){
   const now = Date.now();
@@ -58,11 +60,45 @@ function getClientIp(req){
   return req.headers['x-real-ip'] || req.socket?.remoteAddress || 'unknown';
 }
 
+function normalizeBoolean(value){
+  return value === true || value === 'true' || value === 'on' || value === '1' || value === 1;
+}
+
+function isTrustedOrigin(req){
+  const origin = req.headers.origin;
+  if (!origin) return true;
+
+  try {
+    const originHost = new URL(origin).host;
+    const requestHost = req.headers.host;
+
+    if (originHost === requestHost) return true;
+    if (originHost === 'morodenko-psy.vercel.app') return true;
+    if (originHost === 'localhost:3000' || originHost === 'localhost:4173') return true;
+    if (originHost === '127.0.0.1:3000' || originHost === '127.0.0.1:4173') return true;
+    if (/^morodenko-psy-.+\.vercel\.app$/.test(originHost)) return true;
+
+    return false;
+  } catch (_) {
+    return false;
+  }
+}
+
+function hasHumanTiming(startedAt){
+  if (!Number.isFinite(startedAt) || startedAt <= 0) return false;
+  const elapsed = Date.now() - startedAt;
+  return elapsed >= MIN_FORM_TIME_MS && elapsed <= MAX_FORM_TIME_MS;
+}
+
 export default async function handler(req, res){
   // Method gate
   if (req.method !== 'POST'){
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ success: false, error: 'Method not allowed' });
+  }
+
+  if (!isTrustedOrigin(req)){
+    return res.status(403).json({ success: false, error: 'Forbidden' });
   }
 
   // Body parsing — Vercel auto-parses JSON when Content-Type is set
@@ -85,12 +121,26 @@ export default async function handler(req, res){
   const format  = sanitize(body.format,  100);
   const service = sanitize(body.service, 200);
   const comment = sanitize(body.comment, 2000);
+  const consent = normalizeBoolean(body.consent);
+  const startedAt = Number(body.form_started_at || body.started_at || body.startedAt || 0);
 
   if (!name){
     return res.status(400).json({ success: false, error: 'Имя обязательно' });
   }
   if (!phone || phone.replace(/\D/g, '').length < 11){
     return res.status(400).json({ success: false, error: 'Некорректный телефон' });
+  }
+  if (!format){
+    return res.status(400).json({ success: false, error: 'Выберите формат консультации' });
+  }
+  if (!service){
+    return res.status(400).json({ success: false, error: 'Выберите запрос консультации' });
+  }
+  if (!consent){
+    return res.status(400).json({ success: false, error: 'Нужно согласие на обработку данных' });
+  }
+  if (!hasHumanTiming(startedAt)){
+    return res.status(400).json({ success: false, error: 'Пожалуйста, отправьте форму ещё раз' });
   }
 
   // Resend API key check (fails loudly in logs, generic message to user)
@@ -188,6 +238,10 @@ function renderHtml({ name, phone, format, service, comment }){
                   <td style="padding:10px 0;color:#8a7868;font-size:11px;text-transform:uppercase;letter-spacing:.12em;border-top:1px solid #e6dcc9;">Запрос</td>
                   <td style="padding:10px 0;color:#5a4a3e;font-size:14px;border-top:1px solid #e6dcc9;">${escapeHtml(service || '—')}</td>
                 </tr>
+                <tr>
+                  <td style="padding:10px 0;color:#8a7868;font-size:11px;text-transform:uppercase;letter-spacing:.12em;border-top:1px solid #e6dcc9;">Согласие</td>
+                  <td style="padding:10px 0;color:#5a4a3e;font-size:14px;border-top:1px solid #e6dcc9;">Получено · политика конфиденциальности</td>
+                </tr>
                 ${commentRow ? `<tr><td colspan="2" style="border-top:1px solid #e6dcc9;"></td></tr>${commentRow}` : ''}
               </table>
             </td>
@@ -228,6 +282,7 @@ function renderText({ name, phone, format, service, comment }){
     `Телефон:    ${phone}`,
     `Формат:     ${format || '—'}`,
     `Запрос:     ${service || '—'}`,
+    'Согласие:   получено',
     comment ? `\nКомментарий:\n${comment}` : '',
     '\n— Сайт Мороденко Евгении'
   ].filter(Boolean).join('\n');

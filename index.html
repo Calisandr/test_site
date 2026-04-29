@@ -136,7 +136,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="/assets/portrait-academic.webp" type="image/webp">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.min.css?v=20260429-theme-chrome">
+<link rel="stylesheet" href="styles.min.css?v=20260429-prod">
 
 <!-- ============== ANTI-FLASH for dark theme (must run before <body> renders) ============== -->
 <script>
@@ -1561,6 +1561,7 @@
 
         <!-- Honeypot — bots fill all fields, humans skip hidden ones -->
         <input type="checkbox" name="botcheck" style="display:none !important" tabindex="-1" autocomplete="off">
+        <input type="hidden" id="formStartedAt" name="form_started_at" value="">
 
         <div class="field">
           <label for="fName">Как к&nbsp;вам обращаться</label>
@@ -1574,7 +1575,8 @@
           </div>
           <div class="field">
             <label for="fFormat">Формат</label>
-            <select id="fFormat" name="format">
+            <select id="fFormat" name="format" required>
+              <option value="" selected disabled>Выберите формат</option>
               <option>Очно · Прокопьевск</option>
               <option>Онлайн</option>
               <option>Пока не решил(а)</option>
@@ -1584,7 +1586,8 @@
 
         <div class="field">
           <label for="fService">С каким запросом хотите прийти?</label>
-          <select id="fService" name="service">
+          <select id="fService" name="service" required>
+            <option value="" selected disabled>Выберите запрос</option>
             <option>Первичная консультация</option>
             <option>Сложности в отношениях / семейная</option>
             <option>Тревога и панические атаки</option>
@@ -1690,9 +1693,9 @@
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="script.min.js?v=20260429-theme-chrome"></script>
+<script src="assets/vendor/gsap.min.js?v=3.12.5"></script>
+<script src="assets/vendor/ScrollTrigger.min.js?v=3.12.5"></script>
+<script src="assets/vendor/lenis.min.js?v=1.1.13"></script>
+<script src="script.min.js?v=20260429-prod"></script>
 </body>
 </html>

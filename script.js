@@ -501,13 +501,19 @@
 
     options.forEach((option, index) => {
       const item = document.createElement('div');
+      const disabled = option.disabled;
       item.className = 'custom-select__option';
+      item.classList.toggle('is-disabled', disabled);
       item.setAttribute('role', 'option');
+      item.setAttribute('aria-disabled', disabled ? 'true' : 'false');
       item.id = `${baseId}-custom-option-${index}`;
       item.dataset.index = String(index);
       item.textContent = option.textContent;
-      item.addEventListener('mousemove', () => setActive(index, false));
+      item.addEventListener('mousemove', () => {
+        if (!disabled) setActive(index, false);
+      });
       item.addEventListener('click', () => {
+        if (disabled) return;
         choose(index, true);
         close();
         button.focus({ preventScroll: true });
@@ -517,6 +523,23 @@
 
     const items = Array.from(list.children);
     let activeIndex = Math.max(0, select.selectedIndex);
+
+    function isDisabled(index){
+      return Boolean(options[index]?.disabled);
+    }
+
+    function findEnabledIndex(index, direction = 1){
+      const clamped = Math.max(0, Math.min(items.length - 1, index));
+      if (!isDisabled(clamped)) return clamped;
+
+      for (let i = clamped + direction; i >= 0 && i < items.length; i += direction){
+        if (!isDisabled(i)) return i;
+      }
+      for (let i = clamped - direction; i >= 0 && i < items.length; i -= direction){
+        if (!isDisabled(i)) return i;
+      }
+      return clamped;
+    }
 
     function sync(){
       const selectedIndex = Math.max(0, select.selectedIndex);
@@ -531,7 +554,8 @@
     }
 
     function setActive(index, scroll = true){
-      activeIndex = Math.max(0, Math.min(items.length - 1, index));
+      const direction = index >= activeIndex ? 1 : -1;
+      activeIndex = findEnabledIndex(index, direction);
       items.forEach((item, itemIndex) => {
         item.classList.toggle('is-active', itemIndex === activeIndex);
       });
@@ -542,6 +566,7 @@
     }
 
     function choose(index, emitChange){
+      if (isDisabled(index)) return;
       select.selectedIndex = index;
       sync();
       if (emitChange){
@@ -632,7 +657,13 @@
     const errorText  = document.getElementById('formErrorText');
     const content    = form.querySelector('.form__content');
     const submitBtn  = form.querySelector('button[type="submit"]');
+    const startedAtInput = form.querySelector('#formStartedAt');
     const submitOriginalHTML = submitBtn.innerHTML;
+
+    function resetStartedAt(){
+      if (startedAtInput) startedAtInput.value = String(Date.now());
+    }
+    resetStartedAt();
 
     function showSuccess(){
       content.style.display = 'none';
@@ -640,6 +671,7 @@
       success.classList.add('show');
       setTimeout(() => {
         form.reset();
+        resetStartedAt();
         content.style.display = 'block';
         success.classList.remove('show');
         submitBtn.disabled = false;
@@ -655,6 +687,7 @@
     }
 
     function flagInvalid(field){
+      if (!field) return;
       field.style.borderColor = 'var(--terracotta)';
       field.style.boxShadow = '0 0 0 4px rgba(184,89,58,.12)';
       setTimeout(() => { field.style.borderColor = ''; field.style.boxShadow = ''; }, 2500);
@@ -666,14 +699,28 @@
 
       const name  = form.querySelector('#fName').value.trim();
       const phone = form.querySelector('#fPhone').value.trim();
+      const formatField = form.querySelector('#fFormat');
+      const serviceField = form.querySelector('#fService');
+      const format = formatField?.value.trim() || '';
+      const service = serviceField?.value.trim() || '';
       const consent = form.querySelector('#fConsent');
       const consentWrap = document.getElementById('formConsentWrap');
+      const formatControl = document.getElementById('fFormat-custom-button') || formatField;
+      const serviceControl = document.getElementById('fService-custom-button') || serviceField;
 
-      // Local validation: name, phone and consent are required
+      // Local validation: all application fields except the comment are required
       let invalid = false;
       if (!name)  { flagInvalid(form.querySelector('#fName'));  invalid = true; }
       if (!phone || phone.replace(/\D/g, '').length < 11) {
         flagInvalid(form.querySelector('#fPhone'));
+        invalid = true;
+      }
+      if (!format) {
+        flagInvalid(formatControl);
+        invalid = true;
+      }
+      if (!service) {
+        flagInvalid(serviceControl);
         invalid = true;
       }
       if (consent && !consent.checked){
@@ -682,6 +729,8 @@
         invalid = true;
       }
       if (invalid) return;
+
+      if (startedAtInput && !startedAtInput.value) resetStartedAt();
 
       // Honeypot: if filled, silently "succeed" — bot trap
       if (form.querySelector('input[name="botcheck"]').checked){
@@ -906,7 +955,7 @@
   function loadThree(){
     if (typeof window.THREE !== 'undefined') return Promise.resolve();
     if (!threeLoader){
-      threeLoader = import('https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js')
+      threeLoader = import('/assets/vendor/three.module.js?v=20260429-prod')
         .then(module => {
           window.THREE = module;
         });

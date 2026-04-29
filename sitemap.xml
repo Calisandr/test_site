@@ -3,7 +3,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://morodenko-psy.vercel.app/</loc>
-    <lastmod>2026-04-28</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -17,13 +17,13 @@
   </url>
   <url>
     <loc>https://morodenko-psy.vercel.app/test.html</loc>
-    <lastmod>2026-04-28</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://morodenko-psy.vercel.app/privacy.html</loc>
-    <lastmod>2026-04-28</lastmod>
+    <lastmod>2026-04-29</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
