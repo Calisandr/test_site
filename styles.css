@@ -441,10 +441,11 @@ h1,h2,h3,h4{
 }
 .nav__links{
   display: none;
-  gap: 26px;
+  gap: 22px;
   align-items: center;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 560;
+  letter-spacing: 0.005em;
 }
 .nav__links a{
   position: relative;
@@ -3541,7 +3542,7 @@ body.menu-open .theme-toggle--mobile{
 .nav__mobile a:hover{ color: var(--terracotta); }
 
 /* ============== MEDIA QUERIES ============== */
-@media (min-width: 1024px){
+@media (min-width: 1101px){
   .nav__links{ display: flex; }
   .nav__cta{
     display: inline-flex;
@@ -3551,10 +3552,10 @@ body.menu-open .theme-toggle--mobile{
   .nav__burger{ display: none; }
 }
 @media (max-width: 1280px){
-  .nav__links{ gap: 18px; font-size: 0.86rem; }
+  .nav__links{ gap: 20px; font-size: 0.92rem; }
 }
 @media (max-width: 1100px){
-  .nav__links{ gap: 14px; font-size: 0.82rem; }
+  .nav__links{ gap: 14px; font-size: 0.86rem; }
   .nav__cta{ padding: 10px 18px !important; font-size: .82rem !important; }
   .logo__name small{ display: none; }
   .footer__brand .logo__name small{ display: block; }
