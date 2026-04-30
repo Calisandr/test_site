@@ -8,8 +8,33 @@
   /* ============================================== */
   /* ---- ANALYTICS HELPER (Yandex.Metrika) ---- */
   /* ============================================== */
+  const COOKIE_CONSENT_KEY = 'morodenko_cookie_consent';
   const METRIKA_ID = Number(window.MORODENKO_METRIKA_ID) || null;
-  if (METRIKA_ID){
+  let analyticsInitialized = false;
+
+  function getCookieConsent(){
+    try {
+      const value = localStorage.getItem(COOKIE_CONSENT_KEY);
+      return value === 'accepted' || value === 'necessary' ? value : null;
+    } catch(_) {
+      return null;
+    }
+  }
+
+  function hasAnalyticsConsent(){
+    return getCookieConsent() === 'accepted';
+  }
+
+  function setCookieConsent(value){
+    try { localStorage.setItem(COOKIE_CONSENT_KEY, value); } catch(_) {}
+    document.documentElement.setAttribute('data-cookie-consent', value);
+    if (value === 'accepted') initAnalytics();
+  }
+
+  function initAnalytics(){
+    if (!METRIKA_ID || analyticsInitialized || !hasAnalyticsConsent()) return;
+    analyticsInitialized = true;
+
     (function(m,e,t,r,i,k,a){
       m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
       m[i].l=1*new Date();
@@ -30,12 +55,63 @@
       webvisor: true
     });
   }
+
+  const storedCookieConsent = getCookieConsent();
+  if (storedCookieConsent){
+    document.documentElement.setAttribute('data-cookie-consent', storedCookieConsent);
+  }
+  initAnalytics();
+
   function track(goal, params){
     try {
-      if (METRIKA_ID && typeof window.ym === 'function'){
+      initAnalytics();
+      if (METRIKA_ID && hasAnalyticsConsent() && typeof window.ym === 'function'){
         window.ym(METRIKA_ID, 'reachGoal', goal, params);
       }
     } catch(_) {}
+  }
+
+  function initCookieConsentBanner(){
+    if (getCookieConsent() || document.getElementById('cookieConsent')) return;
+
+    const banner = document.createElement('section');
+    banner.className = 'cookie-consent';
+    banner.id = 'cookieConsent';
+    banner.setAttribute('role', 'dialog');
+    banner.setAttribute('aria-labelledby', 'cookieConsentTitle');
+    banner.setAttribute('aria-describedby', 'cookieConsentText');
+
+    banner.innerHTML = `
+      <div class="cookie-consent__panel">
+        <div class="cookie-consent__copy">
+          <h2 id="cookieConsentTitle">Cookie и аналитика</h2>
+          <p id="cookieConsentText">Мы используем необходимые cookie и локальное хранилище для работы сайта и запоминания темы. Аналитика включается только после согласия.</p>
+          <a href="privacy.html#cookies">Подробнее в политике</a>
+        </div>
+        <div class="cookie-consent__actions">
+          <button type="button" class="cookie-consent__btn cookie-consent__btn--ghost" data-cookie-choice="necessary">Только необходимые</button>
+          <button type="button" class="cookie-consent__btn cookie-consent__btn--primary" data-cookie-choice="accepted">Принять</button>
+        </div>
+      </div>
+    `;
+
+    banner.addEventListener('click', event => {
+      const button = event.target.closest('[data-cookie-choice]');
+      if (!button) return;
+
+      setCookieConsent(button.getAttribute('data-cookie-choice') || 'necessary');
+      banner.classList.add('is-hiding');
+      setTimeout(() => banner.remove(), 220);
+    });
+
+    document.body.appendChild(banner);
+    requestAnimationFrame(() => banner.classList.add('is-visible'));
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initCookieConsentBanner, { once: true });
+  } else {
+    initCookieConsentBanner();
   }
 
   /* ============================================== */
@@ -184,7 +260,7 @@
   const nav = document.getElementById('nav');
   function onScroll(){
     const scrolled = window.scrollY > 40;
-    nav.classList.toggle('scrolled', scrolled);
+    if (nav) nav.classList.toggle('scrolled', scrolled);
     // Mirror on body so the fixed-positioned burger (which lives outside <nav>)
     // can also react to the scrolled state
     document.body.classList.toggle('nav-scrolled', scrolled);
