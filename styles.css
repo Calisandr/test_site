@@ -2192,6 +2192,13 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   font-size: 0.9rem;
   letter-spacing: 2px;
 }
+.testimonials__disclaimer{
+  max-width: 760px;
+  margin: 24px 0 0;
+  color: var(--ink-mute);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
 .testimonials__proof{
   margin-top: 72px;
   padding-top: 52px;
@@ -3016,6 +3023,12 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 .field select::-ms-expand{ display: none; }
 .field select.native-select{
   display: none;
+}
+.field__hint{
+  margin: 8px 0 0;
+  color: var(--ink-mute);
+  font-size: 0.8rem;
+  line-height: 1.45;
 }
 .custom-select{
   position: relative;
