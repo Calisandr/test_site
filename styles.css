@@ -1927,6 +1927,9 @@ body.nav-scrolled .nav__burger{ top: 12px; }
   gap: 28px;
   align-items: center;
 }
+.services__note + .services__note{
+  margin-top: 18px;
+}
 .services__note-icon{
   width: 54px; height: 54px;
   background: var(--gold);
@@ -1949,7 +1952,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 /* Gift certificate note — sits right under the payment note,
    tighter spacing + gold accent so it reads as a related-but-distinct item */
 .services__note--gift{
-  margin-top: 14px;
+  margin-top: 18px;
 }
 .services__note--gift .services__note-icon{
   background: transparent;
