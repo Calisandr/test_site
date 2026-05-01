@@ -43,6 +43,8 @@ function setSecurityHeaders(res){
   res.setHeader('Cache-Control', 'no-store, max-age=0');
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'no-referrer');
+  res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('Vary', 'Origin');
 }
 
@@ -87,22 +89,38 @@ function getClientIp(req){
   return req.headers['x-real-ip'] || req.socket?.remoteAddress || 'unknown';
 }
 
+function isLocalHost(host){
+  return /^localhost:\d+$/.test(host) || /^127\.0\.0\.1:\d+$/.test(host);
+}
+
 function normalizeBoolean(value){
   return value === true || value === 'true' || value === 'on' || value === '1' || value === 1;
 }
 
 function isAllowedHost(host, requestHost){
-  return host === requestHost ||
-    host === 'morodenko-psy.vercel.app' ||
-    host === 'localhost:3000' ||
-    host === 'localhost:4173' ||
-    host === 'localhost:4175' ||
-    host === 'localhost:4176' ||
-    host === '127.0.0.1:3000' ||
-    host === '127.0.0.1:4173' ||
-    host === '127.0.0.1:4175' ||
-    host === '127.0.0.1:4176' ||
+  host = String(host || '').toLowerCase();
+  requestHost = String(requestHost || '').toLowerCase();
+
+  if (host === requestHost) return true;
+
+  if (isLocalHost(host)){
+    return process.env.NODE_ENV !== 'production' || isLocalHost(requestHost);
+  }
+
+  return host === 'morodenko-psy.vercel.app' ||
     /^morodenko-psy-.+\.vercel\.app$/.test(host);
+}
+
+function safeErrorInfo(error){
+  const status = Number(error?.statusCode ?? error?.status ?? error?.response?.status);
+  const code = String(error?.code || error?.name || 'Error')
+    .replace(/[\r\n<>]/g, ' ')
+    .slice(0, 80);
+
+  return {
+    code,
+    ...(Number.isFinite(status) ? { status } : {})
+  };
 }
 
 function isTrustedOrigin(req){
@@ -232,7 +250,7 @@ export default async function handler(req, res){
 
   const resend = new Resend(process.env.RESEND_API_KEY);
 
-  const subject = `Новая заявка с сайта · ${name}`;
+  const subject = 'Новая заявка с сайта';
   const html    = renderHtml({ name, phone, format, service, comment });
   const text    = renderText({ name, phone, format, service, comment });
 
@@ -246,7 +264,7 @@ export default async function handler(req, res){
     });
 
     if (error){
-      console.error('[send-lead] Resend error:', error);
+      console.error('[send-lead] Resend error:', safeErrorInfo(error));
       return res.status(502).json({ success: false, error: 'Не удалось отправить' });
     }
 
@@ -254,7 +272,7 @@ export default async function handler(req, res){
     return res.status(200).json({ success: true });
 
   } catch (err){
-    console.error('[send-lead] Unexpected error:', err);
+    console.error('[send-lead] Unexpected error:', safeErrorInfo(err));
     return res.status(500).json({ success: false, error: 'Внутренняя ошибка' });
   }
 }
