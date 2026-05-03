@@ -845,7 +845,7 @@ body.nav-scrolled .nav__burger{ top: 12px; }
 .about__photo img{
   width: 100%; height: 100%;
   object-fit: cover;
-  object-position: center 20%;
+  object-position: center 8%;
   transition: transform 1s var(--ease-out);
 }
 .about__card:hover .about__photo img{ transform: scale(1.04); }
